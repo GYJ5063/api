@@ -26,6 +26,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
   companies.associate = function(models) {
     companies.hasMany(models.users, { foreignKey: 'company_id' });
+    companies.hasMany(models.leads, { foreignKey: 'company_id' });
     companies.hasOne(models.company_addresses, { as: 'address', foreignKey: 'company_id' });
   };
   return companies;

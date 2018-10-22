@@ -2,19 +2,26 @@ const { AuthenticationError } = require('apollo-server');
 const db = require('../models');
 const jwt = require('jsonwebtoken');
 
-const books = [
-    {
-        title: 'Harry Potter and the Chamber of Secrets',
-        author: 'J.K. Rowling',
-    },
-    {
-        title: 'Jurassic Park',
-        author: 'Michael Crichton',
-    },
-];
-
 module.exports = {
     Query: {
+        leads: (root, {id}) => {
+            return new Promise((resolve, reject) => {
+                db.leads.findAll({
+                    where: {
+                        company_id: id
+                    },
+                    include: { model: db.companies }
+                })
+                .then(lead => {
+                    if (!lead) {
+                        throw new Error('lead not found error');
+                    }
+                    console.log(lead);
+                    resolve(lead);
+                })
+                .catch(err => reject(err));
+            });
+        },
         profile: (root, { username, password }, { user }) => {
             return new Promise((resolve, reject) => {
                 if(!user) {
@@ -42,8 +49,7 @@ module.exports = {
             }
 
             return 'Access to endpoint allowed, user is authenticated';
-        },
-        books: () => books
+        }
     },
     Mutation: {
         login: (root, { email, password }, { SECRET }) => {
