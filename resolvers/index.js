@@ -77,9 +77,12 @@ module.exports = {
                     .catch(err => reject(err));
             });
         },
-        createCompany: (root, { name }, context) => {
+        createCompany: (root, { name, telephone, postcode, town, building_number }, context) => {
             return new Promise((resolve, reject) => {
-                db.companies.create({ name })
+                const company = { name, telephone, address: { postcode, town, building_number }};
+                db.companies.create(
+                        company,
+                        { include: [{ all: true}] })
                     .then(company => {
                         if(!company) {
                             reject('Error retrieving company');
