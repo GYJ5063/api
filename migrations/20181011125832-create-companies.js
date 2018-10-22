@@ -9,7 +9,13 @@ module.exports = {
         type: Sequelize.INTEGER(10).UNSIGNED
       },
       name: {
-        type: Sequelize.STRING
+        allowNull: false,
+        type: Sequelize.STRING,
+        unique: true
+      },
+      telephone : {
+        allowNull: false,
+        type: Sequelize.STRING(10)
       },
       createdAt: {
         allowNull: false,

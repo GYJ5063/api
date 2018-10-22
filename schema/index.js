@@ -8,9 +8,18 @@ const typeDefs = gql`
         company: Company
         email: String!
     }
+    type CompanyAddress {
+        id: Int!
+        company_id: Int!
+        postcode: String!
+        town: String!
+        building_number: String!
+    }
     type Company {
         id: Int!
         name: String!
+        telephone: String!
+        address: CompanyAddress!
     }
     type Lead {
         id: Int!
@@ -21,7 +30,7 @@ const typeDefs = gql`
         phone_number: String!
         sale_valuation: Int!
         rental_valuation: Int!
-        company: Company,    
+        company: Company,
     }
     type Query {
         profile: User
@@ -31,7 +40,7 @@ const typeDefs = gql`
     type Mutation {
         login(email: String!, password: String!): String!
         createUser(email: String!, first_name: String!, last_name: String!, password: String!, company_id: String!): User!
-        createCompany(name: String!): Company!
+        createCompany(name: String!, telephone: String!, postcode: String!, town: String!, building_number: Int!): Company!
     }
     
       # This "Book" type can be used in other type declarations.
