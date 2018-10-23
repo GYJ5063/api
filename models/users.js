@@ -51,7 +51,7 @@ module.exports = function(sequelize, DataTypes) {
 	}, { tableName: 'users' });
 
 	users.associate = function(models) {
-		users.belongsTo(models.companies, { foreignKey: 'company_id', targetKey: 'id' });
+		users.belongsTo(models.companies, { as: 'company', foreignKey: 'company_id', targetKey: 'id' });
 	};
 
 	users.validPassword = function(password, hash) {

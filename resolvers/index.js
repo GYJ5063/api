@@ -73,14 +73,47 @@ module.exports = {
         },
         createUser: (root, args, context) => {
             return new Promise((resolve, reject) => {
-                db.users.create(args)
-                    .then(user => {
-                        if(!user) {
-                            reject('Error retrieving user');
+                // TODO: clean up all this nesting with await/async
+                const { email, first_name, last_name, password,
+                        company_name, company_telephone,
+                        company_postcode, company_town, company_building_number } = args;
+
+                const user = { email, first_name, last_name, password };
+
+                db.companies.find({ where: { name: company_name }})
+                    .then(company => {
+                        if(!company) {
+                            const company = {
+                                name: company_name,
+                                telephone: company_telephone,
+                                address: {
+                                    postcode: company_postcode,
+                                    town: company_town,
+                                    building_number: company_building_number
+                                }
+                            };
+
+                            user.company = company;
+
+                            db.users.create(user, { include: [{ all: true}] })
+                                .then(user => {
+                                    if(!user) {
+                                        reject('Error creating user')
+                                    }
+                                    resolve(user);
+                                });
                         }
-                        resolve(user);
-                    })
-                    .catch(err => reject(err));
+                        else {
+                            user.company_id = company.id;
+                            db.users.create(user)
+                                .then(user => {
+                                    if(!user) {
+                                        reject('Error creating user')
+                                    }
+                                    resolve(user);
+                                });
+                        }
+                    });
             });
         },
         createCompany: (root, { name, telephone, postcode, town, building_number }, context) => {
