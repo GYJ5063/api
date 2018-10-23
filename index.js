@@ -1,5 +1,7 @@
-const { ApolloServer, gql } = require('apollo-server');
+const { ApolloServer } = require('apollo-server');
 const Sequelize = require('sequelize');
+const jwt = require('jsonwebtoken');
+
 const config = require('./config/config.json');
 
 // This is a (sample) collection of books we'll be able to query
@@ -15,6 +17,9 @@ const resolvers = require('./resolvers/index.js');
 const env = process.env.NODE_ENV === 'production' ? 'production' : "development";
 const { database, username, password, dialect, host } = config[env];
 
+// TODO: need to update with a real, secure value
+const SECRET = 'keyboard_cat';
+
 const connection = new Sequelize(database, username, password, {
     dialect: dialect,
     host: host,
@@ -29,7 +34,27 @@ const connection = new Sequelize(database, username, password, {
 // In the most basic sense, the ApolloServer can be started
 // by passing type definitions (typeDefs) and the resolvers
 // responsible for fetching the data for those types.
-const server = new ApolloServer({ typeDefs, resolvers });
+const server = new ApolloServer({
+    typeDefs,
+    resolvers,
+    context: ({ req }) => {
+        let user = null;
+        let bearer = null;
+        const token = req.headers.authorization;
+
+        if(token) {
+            try {
+                bearer = jwt.verify(token, SECRET);
+                user = bearer.user;
+            } catch (error) {
+                console.log(error);
+            }
+        }
+
+        return { user, SECRET };
+    } 
+
+});
 
 // This `listen` method launches a web-server.  Existing apps
 // can utilize middleware options, which we'll discuss later.
