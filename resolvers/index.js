@@ -71,7 +71,11 @@ module.exports = {
 
                 });
         },
-        createUser: (root, args, context) => {
+        createUser: (root, args, { user }) => {
+            if(!user) {
+                return new AuthenticationError('must be logged in');
+            }
+
             // TODO: see if this method can be simplified using async/await
             return new Promise((resolve, reject) => {
                 const { email, first_name, last_name, password,
