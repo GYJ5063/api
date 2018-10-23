@@ -51,7 +51,8 @@ module.exports = function(sequelize, DataTypes) {
 	}, { tableName: 'users' });
 
 	users.associate = function(models) {
-		users.belongsTo(models.companies, { foreignKey: 'company_id', targetKey: 'id' });
+		// this assignment is done for the nested associations during creation
+		users.company = users.belongsTo(models.companies, { as: 'company', foreignKey: 'company_id', targetKey: 'id' });
 	};
 
 	users.validPassword = function(password, hash) {

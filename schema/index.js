@@ -21,33 +21,34 @@ const typeDefs = gql`
         telephone: String!
         address: CompanyAddress!
     }
-    type Lead {
+ 
+    type Query {
+        profile: User
+        restrictedEndPoint: String!
+        leads(id: ID!): [Lead]
+    }
+   
+     type Lead {
         id: Int!
-        name: String!
         first_name: String!
         last_name: String!
         email: String!
         phone_number: String!
         sale_valuation: Int!
         rental_valuation: Int!
-        company: Company,
+        company: Company,    
+        createdAt: String!,
+        updatedAt: String!        
     }
-    type Query {
-        profile: User
-        restrictedEndPoint: String!
-        books: [Book]
-    }
+
     type Mutation {
         login(email: String!, password: String!): String!
-        createUser(email: String!, first_name: String!, last_name: String!, password: String!, company_id: String!): User!
+        createUser(email: String!, first_name: String!, last_name: String!, password: String!,
+                   company_name: String, company_telephone: String, company_postcode: String, company_town: String, company_building_number: String): User!
         createCompany(name: String!, telephone: String!, postcode: String!, town: String!, building_number: Int!): Company!
     }
     
-      # This "Book" type can be used in other type declarations.
-      type Book {
-        title: String
-        author: String
-      }
+
     
      
 `;
