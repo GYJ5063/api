@@ -73,17 +73,23 @@ module.exports = {
         },
         createUser: (root, args, context) => {
             return new Promise((resolve, reject) => {
-                // TODO: clean up all this nesting with await/async
                 const { email, first_name, last_name, password,
                         company_name, company_telephone,
                         company_postcode, company_town, company_building_number } = args;
 
                 const user = { email, first_name, last_name, password };
 
-                db.companies.find({ where: { name: company_name }})
+                if(company_name) {
+                    // see if company exists
+                    db.companies.find({ where: { name: company_name }})
                     .then(company => {
+                        console.log('company is: ', company);
                         if(!company) {
-                            const company = {
+                            // company doesn't exist, check if mandatory fields are present
+                            if(!company_telephone || !company_postcode || !company_town || !company_building_number) {
+                                reject('New companies must also have a telephone and address');
+                            }
+                            const newCompany = {
                                 name: company_name,
                                 telephone: company_telephone,
                                 address: {
@@ -93,27 +99,47 @@ module.exports = {
                                 }
                             };
 
-                            user.company = company;
-
-                            db.users.create(user, { include: [{ all: true}] })
+                            user.company = newCompany;
+                            console.log('incoming: ', user);
+                            db.users.create(
+                                    user,
+                                    { include: [{
+                                        association: db.users.company,
+                                        include:  [ db.companies.address ]
+                                    }] })
                                 .then(user => {
                                     if(!user) {
                                         reject('Error creating user')
                                     }
                                     resolve(user);
-                                });
+                                })
+                                .catch(err => reject(err));;
                         }
                         else {
+                            // company exists, link company
                             user.company_id = company.id;
                             db.users.create(user)
-                                .then(user => {
-                                    if(!user) {
-                                        reject('Error creating user')
-                                    }
-                                    resolve(user);
-                                });
+                            .then(user => {
+                                if(!user) {
+                                    reject('Error creating user')
+                                }
+                                resolve(user);
+                            })
+                            .catch(err => reject(err));
                         }
                     });
+                }
+                else {
+                    // no company supplied
+                    db.users.create(user)
+                    .then(user => {
+                        if(!user) {
+                            reject('Error creating user')
+                        }
+                        resolve(user);
+                    })
+                    .catch(err => reject(err));;
+                }
             });
         },
         createCompany: (root, { name, telephone, postcode, town, building_number }, context) => {
