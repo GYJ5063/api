@@ -72,6 +72,7 @@ module.exports = {
                 });
         },
         createUser: (root, args, context) => {
+            // TODO: see if this method can be simplified using async/await
             return new Promise((resolve, reject) => {
                 const { email, first_name, last_name, password,
                         company_name, company_telephone,
@@ -83,12 +84,14 @@ module.exports = {
                     // see if company exists
                     db.companies.find({ where: { name: company_name }})
                     .then(company => {
-                        console.log('company is: ', company);
                         if(!company) {
+
                             // company doesn't exist, check if mandatory fields are present
                             if(!company_telephone || !company_postcode || !company_town || !company_building_number) {
                                 reject('New companies must also have a telephone and address');
                             }
+
+                            // new company to create
                             const newCompany = {
                                 name: company_name,
                                 telephone: company_telephone,
@@ -99,8 +102,9 @@ module.exports = {
                                 }
                             };
 
+                            // link company to user
                             user.company = newCompany;
-                            console.log('incoming: ', user);
+
                             db.users.create(
                                     user,
                                     { include: [{
@@ -118,6 +122,7 @@ module.exports = {
                         else {
                             // company exists, link company
                             user.company_id = company.id;
+
                             db.users.create(user)
                             .then(user => {
                                 if(!user) {
