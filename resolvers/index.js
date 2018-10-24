@@ -30,7 +30,7 @@ module.exports = {
 
                 db.users.find({
                     where: { id: user.id },
-                    include: { model: db.companies }
+                    include: { model: db.companies, as: 'company' }
 
                 })
                     .then(user => {
