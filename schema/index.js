@@ -36,21 +36,18 @@ const typeDefs = gql`
         phone_number: String!
         sale_valuation: Int!
         rental_valuation: Int!
-        company: Company,    
+        company: Company,
         createdAt: String!,
-        updatedAt: String!        
+        updatedAt: String!
     }
 
     type Mutation {
         login(email: String!, password: String!): String!
+        forgotPassword(email: String!): String!
         createUser(email: String!, first_name: String!, last_name: String!, password: String!,
                    company_name: String, company_telephone: String, company_postcode: String, company_town: String, company_building_number: String): User!
         createCompany(name: String!, telephone: String!, postcode: String!, town: String!, building_number: Int!): Company!
     }
-    
-
-    
-     
 `;
 
 module.exports = typeDefs;

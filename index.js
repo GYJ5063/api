@@ -1,6 +1,7 @@
 const { ApolloServer } = require('apollo-server');
 const Sequelize = require('sequelize');
 const jwt = require('jsonwebtoken');
+const nodemailer = require('nodemailer');
 
 const config = require('./config/config.json');
 
@@ -17,8 +18,9 @@ const resolvers = require('./resolvers/index.js');
 const env = process.env.NODE_ENV === 'production' ? 'production' : "development";
 const { database, username, password, dialect, host } = config[env];
 
-// TODO: need to update with a real, secure value
+// TODO: need to update with real, secure values
 const SECRET = 'keyboard_cat';
+const EMAIL_SECRET = 'tetris_turtle';
 
 const connection = new Sequelize(database, username, password, {
     dialect: dialect,
@@ -29,6 +31,14 @@ const connection = new Sequelize(database, username, password, {
     }
 });
 
+
+const transporter = nodemailer.createTransport({
+    service: 'Gmail',
+    auth: {
+        user: 'email-goes-here',
+        pass: 'password-goes-here'
+    }
+});
 
 
 // In the most basic sense, the ApolloServer can be started
@@ -51,7 +61,7 @@ const server = new ApolloServer({
             }
         }
 
-        return { user, SECRET };
+        return { user, SECRET, EMAIL_SECRET, transporter };
     } 
 
 });

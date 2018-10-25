@@ -71,6 +71,44 @@ module.exports = {
 
                 });
         },
+        forgotPassword: (root, { email }, { EMAIL_SECRET, transporter }) => {
+            return new Promise((resolve, reject) => {
+                db.users.find({ where: { email }})
+                    .then(user => {
+                        if(!user) {
+                            reject('User with email provided not found');
+                        }
+                        // create token
+                        const token = jwt.sign(
+                            { user: user.id },
+                            EMAIL_SECRET,
+                            { expiresIn: '1h' });
+
+                        db.password_resets.create({ email, token, created_at: Date.now() })
+                            .then(pwr => {
+                                if(!pwr) {
+                                    reject('error resetting password')
+                                }
+
+                                // send email
+                                // TODO: url will come from context?
+                                const url = `http://localhost:4000/reset/${pwr.token}`
+                                transporter.sendMail({
+                                    to: user.email,
+                                    subject: 'Set new password',
+                                    html: `Please click this email to set new password <a href="${url}">${url}</a>`
+                                }, (err, info) => {
+                                    if(err){
+                                        console.error(err, info);
+                                    }
+                                    resolve(`Password reset link sent to ${user.email}`);
+                                });
+                            })
+                            .catch(err => reject(err));;
+                    })
+                    .catch(err => reject(err));
+            });
+        },
         createUser: (root, args, { user }) => {
             if(!user) {
                 return new AuthenticationError('must be logged in');
