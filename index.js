@@ -22,6 +22,9 @@ const { database, username, password, dialect, host } = config[env];
 const SECRET = 'keyboard_cat';
 const EMAIL_SECRET = 'tetris_turtle';
 
+// TODO: move this somewhere appropriate or get this dynamically
+const url = 'http://localhost:4000/';
+
 const connection = new Sequelize(database, username, password, {
     dialect: dialect,
     host: host,
@@ -61,7 +64,7 @@ const server = new ApolloServer({
             }
         }
 
-        return { user, SECRET, EMAIL_SECRET, transporter };
+        return { user, SECRET, EMAIL_SECRET, transporter, url };
     } 
 
 });

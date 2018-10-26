@@ -71,7 +71,7 @@ module.exports = {
 
                 });
         },
-        forgotPassword: (root, { email }, { EMAIL_SECRET, transporter }) => {
+        forgotPassword: (root, { email }, { EMAIL_SECRET, transporter, url }) => {
             return new Promise((resolve, reject) => {
                 db.users.find({ where: { email }})
                     .then(user => {
@@ -84,27 +84,50 @@ module.exports = {
                             EMAIL_SECRET,
                             { expiresIn: '1h' });
 
-                        db.password_resets.create({ email, token, created_at: Date.now() })
-                            .then(pwr => {
-                                if(!pwr) {
-                                    reject('error resetting password')
-                                }
+                        const password_reset = { email, token, created_at: Date.now() };
 
-                                // send email
-                                // TODO: url will come from context?
-                                const url = `http://localhost:4000/reset/${pwr.token}`
-                                transporter.sendMail({
-                                    to: user.email,
-                                    subject: 'Set new password',
-                                    html: `Please click this email to set new password <a href="${url}">${url}</a>`
-                                }, (err, info) => {
-                                    if(err){
-                                        console.error(err, info);
-                                    }
-                                    resolve(`Password reset link sent to ${user.email}`);
-                                });
+                        db.password_resets
+                            .findOrCreate({where: { email }, defaults: password_reset })
+                            .spread((newPwr, created) => {
+                                if (!created) {
+                                    // reset token exists, update with new token, created_at
+                                    db.password_resets
+                                        .update(password_reset, { where: { email }})
+                                        .then(updated => {
+                                            if(!updated) {
+                                                reject('error resetting password');
+                                            }
+                                            // send email
+                                            const resetUrl = `${url}reset/${password_reset.token}`;
+                                            transporter.sendMail({
+                                                to: user.email,
+                                                subject: 'Set new password',
+                                                html: `Please click this email to set new password <a href="${resetUrl}">${resetUrl}</a>`
+                                            }, (err, info) => {
+                                                if(err){
+                                                    console.error(err, info);
+                                                }
+                                                resolve(`Password reset link sent to ${user.email}`);
+                                            });
+                                        })
+                                        .catch(err => reject(err));
+                                } else {
+                                    // new password_reset created, send email
+                                    console.log('created');
+                                    const resetUrl = `${url}reset/${newPwr.token}`;
+                                    transporter.sendMail({
+                                        to: user.email,
+                                        subject: 'Set new password',
+                                        html: `Please click this email to set new password <a href="${resetUrl}">${resetUrl}</a>`
+                                    }, (err, info) => {
+                                        if(err){
+                                            console.error(err, info);
+                                        }
+                                        resolve(`Password reset link sent to ${user.email}`);
+                                    });
+                                }
                             })
-                            .catch(err => reject(err));;
+                            .catch(err => reject(err));
                     })
                     .catch(err => reject(err));
             });
