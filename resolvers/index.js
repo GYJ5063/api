@@ -132,6 +132,25 @@ module.exports = {
                     .catch(err => reject(err));
             });
         },
+        verifyToken: (root, { token }, { EMAIL_SECRET }) => {
+            return new Promise((resolve, reject) => {
+                db.password_resets.find({ where: { token }})
+                    .then(pwr => {
+                        if(pwr) {
+                            try {
+                                // token exists, verify it hasn't expired
+                                const { user: { id } } = jwt.verify(token, EMAIL_SECRET);
+                                console.log(id);
+                                resolve('verified');
+                            } catch (error) {
+                                reject('redirect to forgotPassword page');
+                            }
+                        } else {
+                            reject('Invalid token, redirect to forgotPasswor anyway?');
+                        }
+                    });
+            });
+        },
         createUser: (root, args, { user }) => {
             if(!user) {
                 return new AuthenticationError('must be logged in');
