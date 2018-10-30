@@ -23,7 +23,7 @@ const SECRET = 'keyboard_cat';
 const EMAIL_SECRET = 'tetris_turtle';
 
 // TODO: move this somewhere appropriate or get this dynamically
-const url = 'http://localhost:4000/';
+const url = 'http://localhost:8081/';
 
 const connection = new Sequelize(database, username, password, {
     dialect: dialect,
@@ -40,6 +40,9 @@ const transporter = nodemailer.createTransport({
     auth: {
         user: 'email-goes-here',
         pass: 'password-goes-here'
+    },
+    tls: {
+        rejectUnauthorized: false
     }
 });
 

@@ -146,7 +146,6 @@ module.exports = {
                                 resolve(false);
                             }
                         } else {
-                            console.log('pwr is: ', pwr);
                             resolve(false);
                         }
                     })
