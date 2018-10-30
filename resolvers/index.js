@@ -141,13 +141,18 @@ module.exports = {
                                 // token exists, verify it hasn't expired
                                 const { user: { id } } = jwt.verify(token, EMAIL_SECRET);
                                 console.log(id);
-                                resolve('verified');
+                                resolve(true);
                             } catch (error) {
-                                reject('redirect to forgotPassword page');
+                                resolve(false);
                             }
                         } else {
-                            reject('Invalid token, redirect to forgotPasswor anyway?');
+                            console.log('pwr is: ', pwr);
+                            resolve(false);
                         }
+                    })
+                    .catch(err => {
+                        console.error(err);
+                        resolve(false);
                     });
             });
         },
