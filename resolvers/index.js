@@ -113,7 +113,6 @@ module.exports = {
                                         .catch(err => reject(err));
                                 } else {
                                     // new password_reset created, send email
-                                    console.log('created');
                                     const resetUrl = `${url}reset/${newPwr.token}`;
                                     transporter.sendMail({
                                         to: user.email,
@@ -143,6 +142,7 @@ module.exports = {
                                 console.log(id);
                                 resolve(true);
                             } catch (error) {
+                                console.error(error);
                                 resolve(false);
                             }
                         } else {
@@ -154,6 +154,9 @@ module.exports = {
                         resolve(false);
                     });
             });
+        },
+        resetPassword: (root, { token, password, confirmPassword }, { EMAIL_SECRET }) => {
+            // TODO
         },
         createUser: (root, args, { user }) => {
             if(!user) {

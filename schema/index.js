@@ -48,6 +48,7 @@ const typeDefs = gql`
                    company_name: String, company_telephone: String, company_postcode: String, company_town: String, company_building_number: String): User!
         createCompany(name: String!, telephone: String!, postcode: String!, town: String!, building_number: Int!): Company!
         verifyToken(token: String!): Boolean!
+        resetPassword(token: String!, password: String!, confirmPassword: String!): String!
     }
 `;
 
