@@ -99,31 +99,33 @@ module.exports = {
                                             }
                                             // send email
                                             const resetUrl = `${url}reset/${password_reset.token}`;
-                                            transporter.sendMail({
-                                                to: user.email,
-                                                subject: 'Set new password',
-                                                html: `Please click this email to set new password <a href="${resetUrl}">${resetUrl}</a>`
-                                            }, (err, info) => {
-                                                if(err){
-                                                    console.error(err, info);
-                                                }
-                                                resolve(`Password reset link sent to ${user.email}`);
-                                            });
+                                            resolve(`updated old token, url is: ${resetUrl}`);
+                                            // transporter.sendMail({
+                                            //     to: user.email,
+                                            //     subject: 'Set new password',
+                                            //     html: `Please click this email to set new password <a href="${resetUrl}">${resetUrl}</a>`
+                                            // }, (err, info) => {
+                                            //     if(err){
+                                            //         console.error(err, info);
+                                            //     }
+                                            //     resolve(`Password reset link sent to ${user.email}`);
+                                            // });
                                         })
                                         .catch(err => reject(err));
                                 } else {
                                     // new password_reset created, send email
                                     const resetUrl = `${url}reset/${newPwr.token}`;
-                                    transporter.sendMail({
-                                        to: user.email,
-                                        subject: 'Set new password',
-                                        html: `Please click this email to set new password <a href="${resetUrl}">${resetUrl}</a>`
-                                    }, (err, info) => {
-                                        if(err){
-                                            console.error(err, info);
-                                        }
-                                        resolve(`Password reset link sent to ${user.email}`);
-                                    });
+                                    // transporter.sendMail({
+                                    //     to: user.email,
+                                    //     subject: 'Set new password',
+                                    //     html: `Please click this email to set new password <a href="${resetUrl}">${resetUrl}</a>`
+                                    // }, (err, info) => {
+                                    //     if(err){
+                                    //         console.error(err, info);
+                                    //     }
+                                    //     resolve(`Password reset link sent to ${user.email}`);
+                                    // });
+                                    resolve(`created new token, url is: ${resetUrl}`);
                                 }
                             })
                             .catch(err => reject(err));
@@ -138,8 +140,7 @@ module.exports = {
                         if(pwr) {
                             try {
                                 // token exists, verify it hasn't expired
-                                const { user: { id } } = jwt.verify(token, EMAIL_SECRET);
-                                console.log(id);
+                                const { user } = jwt.verify(token, EMAIL_SECRET);
                                 resolve(true);
                             } catch (error) {
                                 console.error(error);
@@ -155,13 +156,53 @@ module.exports = {
                     });
             });
         },
-        resetPassword: (root, { token, password, confirmPassword }, { EMAIL_SECRET }) => {
-            // TODO
+        resetPassword: (root, { token, password, confirmPassword }, context) => {
+            return new Promise((resolve, reject) => {
+                module.exports.Mutation
+                    .verifyToken(root, { token }, context)
+                    .then(valid => {
+                        if(!valid){
+                            // this would only happen if the token expired after page rendered
+                            throw new Error('token not valid');
+                        }
+                        if(password !== confirmPassword) {
+                            // already checked on the front end but just to be safe
+                            throw new Error('Passwords do not match');
+                        }
+
+                        try {
+                            const { user } = jwt.verify(token, context.EMAIL_SECRET);
+
+                            // token valid, passwords match, update password
+                            const userToUpdate = { password: password };
+                            db.users
+                                .update(userToUpdate, { where : { id: user }, individualHooks: true })
+                                .then(updated => {
+                                    if(!updated) {
+                                        reject('Error updating password');
+                                    }
+                                    resolve('password updated :)');
+                                })
+                                .catch(err => {
+                                    console.error(err);
+                                    reject('Error updating password')
+                                });
+                        } catch (error) {
+                            // token became invalid
+                            console.error(error);
+                            throw new Error('token not valid');
+                        }
+                    })
+                    .catch(err => {
+                        console.error(err);
+                        reject('token not valid');
+                    });
+            });
         },
         createUser: (root, args, { user }) => {
-            if(!user) {
-                return new AuthenticationError('must be logged in');
-            }
+            // if(!user) {
+            //     return new AuthenticationError('must be logged in');
+            // }
 
             // TODO: see if this method can be simplified using async/await
             return new Promise((resolve, reject) => {

@@ -67,7 +67,7 @@ module.exports = function(sequelize, DataTypes) {
 		});
 	};
 
-	users.hook('beforeCreate', function(user, options) {
+	users.hook('beforeSave', function(user, options) {
 		return new Promise((resolve, reject) => {
 			var salt = bcrypt.genSaltSync(12);
 
