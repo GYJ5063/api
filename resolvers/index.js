@@ -41,14 +41,6 @@ module.exports = {
                     })
                     .catch(err => reject(err));
             });
-        },
-        // this is for testing
-        restrictedEndPoint: (root, args, { user }) => {
-            if(!user) {
-                return new AuthenticationError('restricted endpoint');
-            }
-
-            return 'Access to endpoint allowed, user is authenticated';
         }
     },
     Mutation: {
