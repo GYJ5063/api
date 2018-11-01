@@ -38,8 +38,8 @@ const connection = new Sequelize(database, username, password, {
 const transporter = nodemailer.createTransport({
     service: 'Gmail',
     auth: {
-        user: 'email-goes-here',
-        pass: 'password-goes-here'
+        user: 'noreply@housevault.co.uk',
+        pass: 'lZX4bdyr4Q'
     },
     tls: {
         rejectUnauthorized: false
