@@ -2,6 +2,22 @@ const { AuthenticationError } = require('apollo-server');
 const db = require('../models');
 const jwt = require('jsonwebtoken');
 
+const sendEmail = (transporter, to, subject, html) => {
+    return new Promise((resolve, reject) => {
+        transporter.sendMail({
+            to,
+            subject,
+            html
+        }, (err, info) => {
+            if(err){
+                console.error(err, info);
+                reject(err);
+            }
+            resolve(info);
+        });
+    });
+};
+
 module.exports = {
     Query: {
         leads: (root, {id}) => {
@@ -91,33 +107,27 @@ module.exports = {
                                             }
                                             // send email
                                             const resetUrl = `${url}reset/${password_reset.token}`;
-                                            resolve(`updated old token, url is: ${resetUrl}`);
-                                            // transporter.sendMail({
-                                            //     to: user.email,
-                                            //     subject: 'Set new password',
-                                            //     html: `Please click this email to set new password <a href="${resetUrl}">${resetUrl}</a>`
-                                            // }, (err, info) => {
-                                            //     if(err){
-                                            //         console.error(err, info);
-                                            //     }
-                                            //     resolve(`Password reset link sent to ${user.email}`);
-                                            // });
+                                            const html = `Please click this email to set new password <a href="${resetUrl}">${resetUrl}</a>`;
+
+                                            sendEmail(transporter, user.email, 'Set new password', html)
+                                                .then(() => resolve(`Password reset link sent to ${user.email}`))
+                                                .catch(err => {
+                                                    console.error(err);
+                                                    resolve(`Password reset link sent to ${user.email}`);
+                                                });
                                         })
                                         .catch(err => reject(err));
                                 } else {
                                     // new password_reset created, send email
                                     const resetUrl = `${url}reset/${newPwr.token}`;
-                                    // transporter.sendMail({
-                                    //     to: user.email,
-                                    //     subject: 'Set new password',
-                                    //     html: `Please click this email to set new password <a href="${resetUrl}">${resetUrl}</a>`
-                                    // }, (err, info) => {
-                                    //     if(err){
-                                    //         console.error(err, info);
-                                    //     }
-                                    //     resolve(`Password reset link sent to ${user.email}`);
-                                    // });
-                                    resolve(`created new token, url is: ${resetUrl}`);
+                                    const html = `Please click this email to set new password <a href="${resetUrl}">${resetUrl}</a>`;
+
+                                    sendEmail(transporter, user.email, 'Set new password', html)
+                                        .then(() => resolve(`Password reset link sent to ${user.email}`))
+                                        .catch(err => {
+                                            console.error(err);
+                                            resolve(`Password reset link sent to ${user.email}`);
+                                        });
                                 }
                             })
                             .catch(err => reject(err));
@@ -191,10 +201,11 @@ module.exports = {
                     });
             });
         },
-        createUser: (root, args, { user }) => {
-            // if(!user) {
-            //     return new AuthenticationError('must be logged in');
-            // }
+        createUser: (root, args, context) => {
+            const { user } = context;
+            if(!user) {
+                return new AuthenticationError('must be logged in');
+            }
 
             // TODO: see if this method can be simplified using async/await
             return new Promise((resolve, reject) => {
@@ -239,7 +250,10 @@ module.exports = {
                                     if(!user) {
                                         reject('Error creating user')
                                     }
-                                    resolve(user);
+                                    // send new user email to set password
+                                    module.exports.Mutation
+                                        .forgotPassword(root, { email: user.email }, context)
+                                        .then(success => resolve(user));
                                 })
                                 .catch(err => reject(err));;
                         }
@@ -252,7 +266,10 @@ module.exports = {
                                 if(!user) {
                                     reject('Error creating user')
                                 }
-                                resolve(user);
+                                // send new user email to set password
+                                module.exports.Mutation
+                                    .forgotPassword(root, { email: user.email }, context)
+                                    .then(success => resolve(user));
                             })
                             .catch(err => reject(err));
                         }
@@ -265,7 +282,10 @@ module.exports = {
                         if(!user) {
                             reject('Error creating user')
                         }
-                        resolve(user);
+                        // send new user email to set password
+                        module.exports.Mutation
+                            .forgotPassword(root, { email: user.email }, context)
+                            .then(success => resolve(user));
                     })
                     .catch(err => reject(err));;
                 }
