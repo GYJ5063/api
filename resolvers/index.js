@@ -1,6 +1,7 @@
 const { AuthenticationError } = require('apollo-server');
 const db = require('../models');
 const jwt = require('jsonwebtoken');
+const passwordGenerator = require('generate-password');
 
 const sendEmail = (transporter, to, subject, html) => {
     return new Promise((resolve, reject) => {
@@ -13,6 +14,7 @@ const sendEmail = (transporter, to, subject, html) => {
                 console.error(err, info);
                 reject(err);
             }
+            console.log(info);
             resolve(info);
         });
     });
@@ -209,9 +211,14 @@ module.exports = {
 
             // TODO: see if this method can be simplified using async/await
             return new Promise((resolve, reject) => {
-                const { email, first_name, last_name, password,
+                const { email, first_name, last_name,
                         company_name, company_telephone,
                         company_postcode, company_town, company_building_number } = args;
+
+                const password = passwordGenerator.generate({
+                    length: 10,
+                    numbers: true
+                });
 
                 const user = { email, first_name, last_name, password };
 
