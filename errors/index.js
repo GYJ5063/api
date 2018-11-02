@@ -12,8 +12,15 @@ const AuthenticationError = createError('AuthenticationError', {
     message: 'Must be logged in.'
 });
 
+const ForbiddenErrorSpecificRole = (role) => {
+    return createError('ForbiddenError', {
+        message: `Requires ${role} role.`
+    });
+};
+
 module.exports = {
     ForbiddenError,
     UnknownError,
-    AuthenticationError
+    AuthenticationError,
+    ForbiddenErrorSpecificRole
 };

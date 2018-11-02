@@ -1,7 +1,7 @@
 const { isInstance } = require('apollo-errors');
 const { createResolver } = require('apollo-resolvers');
 
-const { ForbiddenError, UnknownError, AuthenticationError} = require('../errors');
+const { ForbiddenError, UnknownError, AuthenticationError, ForbiddenErrorSpecificRole} = require('../errors');
 
 const baseResolver = createResolver(
     null,
@@ -25,6 +25,13 @@ const isAuthenticatedResolver = baseResolver.createResolver((root, args, context
 
 });
 
+const hasRoleResolver = (role) => {
+    return isAuthenticatedResolver.createResolver((roots, args, context) => {
+        if(!context.user.roles.includes(role)) {
+            throw new (ForbiddenErrorSpecificRole(role));
+        }
+    });
+};
 
 const isAdminResolver = isAuthenticatedResolver.createResolver((root, args, context) => {
     if(!context.user.roles.includes('admin')) {
@@ -37,5 +44,6 @@ const isAdminResolver = isAuthenticatedResolver.createResolver((root, args, cont
 
 module.exports = {
     isAuthenticatedResolver,
-    isAdminResolver
+    isAdminResolver,
+    hasRoleResolver
 };
