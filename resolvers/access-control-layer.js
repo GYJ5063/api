@@ -25,8 +25,9 @@ const isAuthenticatedResolver = baseResolver.createResolver((root, args, context
 
 });
 
+
 const isAdminResolver = isAuthenticatedResolver.createResolver((root, args, context) => {
-    if(!context.user.roles.contains('admin')) {
+    if(!context.user.roles.includes('admin')) {
         throw new ForbiddenError();
     }
 
