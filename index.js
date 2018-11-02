@@ -3,6 +3,7 @@ const Sequelize = require('sequelize');
 const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
 
+const db = require('./models');
 const config = require('./config/config.json');
 
 // This is a (sample) collection of books we'll be able to query
@@ -53,7 +54,7 @@ const transporter = nodemailer.createTransport({
 const server = new ApolloServer({
     typeDefs,
     resolvers,
-    context: ({ req }) => {
+    context: async ({ req }) => {
         let user = null;
         let bearer = null;
         const token = req.headers.authorization;
@@ -61,8 +62,15 @@ const server = new ApolloServer({
         if(token) {
             try {
                 bearer = jwt.verify(token, SECRET);
-                user = bearer.user;
-                // MOCK
+                
+                // exclude password
+                // if we need the user's password wouldn't we require them to send it
+                user = await db.users.find({
+                    where: { id: bearer.user.id },
+                    attributes: { exclude: ['password']}
+                });
+
+                // TODO: THIS IS MOCK DATA, we will include roles on the above query once ready
                 if(user && user.email === "admin@admin.com") {
                     user.roles = [ 'admin' ];
                     console.log('Added mock data');

@@ -135,14 +135,15 @@ module.exports = {
                     .catch(err => reject(err));
             });
         },
-        verifyToken: (root, { token }, { EMAIL_SECRET }) => {
+        verifyToken: (root, { token }, context) => {
+            console.log('user from the context is: ', context.user);
             return new Promise((resolve, reject) => {
                 db.password_resets.find({ where: { token }})
                     .then(pwr => {
                         if(pwr) {
                             try {
                                 // token exists, verify it hasn't expired
-                                const { user } = jwt.verify(token, EMAIL_SECRET);
+                                const { user } = jwt.verify(token, context.EMAIL_SECRET);
                                 resolve(true);
                             } catch (error) {
                                 console.error(error);
