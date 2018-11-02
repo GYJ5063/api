@@ -22,8 +22,7 @@ const { database, username, password, dialect, host } = config[env];
 const SECRET = 'cEwwBZqmWEYWUjae0xV1u33FI8OpuyRDf6XZA7K4upvgXD9oZtoqAaJdaagl3RxuI0Ha47lNUW3YtsL7mIvkkSRfDkx0jDegL8pAC4J2xKzlINQdym6lifHqKGloj5f6';
 const EMAIL_SECRET = '5SZgxowv54NYDstjO8tUSZahgmMRIzU2PCBd8lU3QctccIIHRwMIS7Wu4IvbZ4iWt17KfNqGeMuHdwTEOK7vnFsOC96bd8k7TpSQsCcFHLqDv7Wh8ykZ2jNXUTidYsrF';
 
-// TODO: move this somewhere appropriate or get this dynamically
-const url = 'http://localhost:8081/';
+const url = process.env.NODE_ENV === 'production' ? 'https://housevault.co.uk/' : 'http://localhost:8081/';
 
 const connection = new Sequelize(database, username, password, {
     dialect: dialect,
