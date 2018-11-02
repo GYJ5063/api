@@ -2,6 +2,7 @@ const { AuthenticationError } = require('apollo-server');
 const db = require('../models');
 const jwt = require('jsonwebtoken');
 const passwordGenerator = require('generate-password');
+const { isAuthenticatedResolver } = require('./access-control-layer');
 
 const sendEmail = (transporter, to, subject, html) => {
     return new Promise((resolve, reject) => {
@@ -65,9 +66,6 @@ module.exports = {
         login: (root, { email, password }, { SECRET }) => {
             return db.users.find({ where: { email }})
                 .then(user => {
-                    if(!user) {
-                        throw new Error('user not found error');
-                    }
                     return db.users.validPassword(password, user.password).then(valid => {
                         if(valid) {
                             const token = jwt.sign(
@@ -203,12 +201,7 @@ module.exports = {
                     });
             });
         },
-        createUser: (root, args, context) => {
-            const { user } = context;
-            if(!user) {
-                return new AuthenticationError('must be logged in');
-            }
-
+        createUser: isAuthenticatedResolver.createResolver((root, args, context) => {
             // TODO: see if this method can be simplified using async/await
             return new Promise((resolve, reject) => {
                 const { email, first_name, last_name,
@@ -297,7 +290,7 @@ module.exports = {
                     .catch(err => reject(err));;
                 }
             });
-        },
+        }),
         createCompany: (root, { name, telephone, postcode, town, building_number }, context) => {
             return new Promise((resolve, reject) => {
                 const company = { name, telephone, address: { postcode, town, building_number }};

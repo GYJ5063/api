@@ -62,6 +62,12 @@ const server = new ApolloServer({
             try {
                 bearer = jwt.verify(token, SECRET);
                 user = bearer.user;
+                // MOCK
+                if(user && user.email === "admin@admin.com") {
+                    user.roles = [ 'admin' ];
+                    console.log('Added mock data');
+                    console.log(user.roles);
+                }
             } catch (error) {
                 console.log(error);
             }
