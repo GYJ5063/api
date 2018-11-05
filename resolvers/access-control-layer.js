@@ -1,7 +1,7 @@
 const { isInstance } = require('apollo-errors');
 const { createResolver } = require('apollo-resolvers');
 
-const { ForbiddenError, UnknownError, AuthenticationError, ForbiddenErrorSpecificRole} = require('../errors');
+const { ForbiddenError, UnknownError, AuthenticationError, ForbiddenErrorForRole} = require('../errors');
 
 const baseResolver = createResolver(
     null,
@@ -9,13 +9,14 @@ const baseResolver = createResolver(
         if(isInstance(error)){
             return error;
         } else {
+            // done to mask graphql errors being sent
             console.error('non graphql error: ', error);
             throw new UnknownError();
         }
     }
 );
 
-const isAuthenticatedResolver = baseResolver.createResolver((root, args, context) => {
+const isAuthenticated = baseResolver.createResolver((root, args, context) => {
     if(!context.user) {
         throw new AuthenticationError();
     }
@@ -25,15 +26,15 @@ const isAuthenticatedResolver = baseResolver.createResolver((root, args, context
 
 });
 
-const hasRoleResolver = (role) => {
-    return isAuthenticatedResolver.createResolver((roots, args, context) => {
+const hasRole = (role) => {
+    return isAuthenticated.createResolver((roots, args, context) => {
         if(!context.user.roles.includes(role)) {
-            throw new (ForbiddenErrorSpecificRole(role));
+            throw new (ForbiddenErrorForRole(role));
         }
     });
 };
 
-const isAdminResolver = isAuthenticatedResolver.createResolver((root, args, context) => {
+const isAdmin = isAuthenticated.createResolver((root, args, context) => {
     if(!context.user.roles.includes('admin')) {
         throw new ForbiddenError();
     }
@@ -43,7 +44,7 @@ const isAdminResolver = isAuthenticatedResolver.createResolver((root, args, cont
 });
 
 module.exports = {
-    isAuthenticatedResolver,
-    isAdminResolver,
-    hasRoleResolver
+    isAuthenticated,
+    isAdmin,
+    hasRole
 };

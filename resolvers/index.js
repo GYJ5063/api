@@ -2,7 +2,7 @@ const { AuthenticationError } = require('apollo-server');
 const db = require('../models');
 const jwt = require('jsonwebtoken');
 const passwordGenerator = require('generate-password');
-const { isAdminResolver, hasRoleResolver } = require('./access-control-layer');
+const { isAdminResolver, hasRole } = require('./access-control-layer');
 
 const sendEmail = (transporter, to, subject, html) => {
     return new Promise((resolve, reject) => {
@@ -202,7 +202,7 @@ module.exports = {
                     });
             });
         },
-        createUser: hasRoleResolver('super-admin').createResolver((root, args, context) => {
+        createUser: hasRole('super-admin').createResolver((root, args, context) => {
             // TODO: see if this method can be simplified using async/await
             return new Promise((resolve, reject) => {
                 const { email, first_name, last_name,
