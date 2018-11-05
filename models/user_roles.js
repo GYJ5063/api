@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       type: DataTypes.INTEGER(10).UNSIGNED
     }
-  }, { timestamps: false });
+  }, { timestamps: false, underscored: true });
   user_roles.associate = function (models) {
     // associations can be defined here
   };

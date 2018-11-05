@@ -67,14 +67,16 @@ const server = new ApolloServer({
                 // if we need the user's password wouldn't we require them to send it
                 user = await db.users.find({
                     where: { id: bearer.user.id },
-                    attributes: { exclude: ['password']}
+                    attributes: { exclude: ['password']},
+                    include: [{
+                        association: db.users.roles,
+                        include: [ db.roles.permissions ]
+                    }]
                 });
-
+                console.log('user roles are: ', user.roles[0].permissions);
                 // TODO: THIS IS MOCK DATA, we will include roles on the above query once ready
                 if(user && user.email === "admin@admin.com") {
                     user.roles = [ 'admin' ];
-                    console.log('Added mock data');
-                    console.log(user.roles);
                 }
             } catch (error) {
                 console.log(error);

@@ -23,10 +23,10 @@ module.exports = (sequelize, DataTypes) => {
     }
   }, {});
   roles.associate = function (models) {
-    roles.belongsTo(models.users, { through: models.user_roles });
+    roles.belongsToMany(models.users, { through: models.user_roles, foreignKey: 'role_id' });
 
     // assignment done for nesting
-    roles.permissions = roles.hasMany(models.permissions, { through: models.role_permissions });
+    roles.permissions = roles.belongsToMany(models.permissions, { through: models.role_permissions, foreignKey: 'role_id' });
   };
   return roles;
 };
