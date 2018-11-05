@@ -1,7 +1,12 @@
 const { isInstance } = require('apollo-errors');
 const { createResolver } = require('apollo-resolvers');
 
-const { ForbiddenError, UnknownError, AuthenticationError, ForbiddenErrorForRole} = require('../errors');
+const { ForbiddenError,
+        UnknownError,
+        AuthenticationError,
+        ForbiddenErrorForRole,
+        ForbiddenErrorForPermission
+} = require('../errors');
 
 const baseResolver = createResolver(
     null,
@@ -43,8 +48,23 @@ const isAdmin = isAuthenticated.createResolver((root, args, context) => {
     // so the request continues to next child resolver
 });
 
+const hasPermission = (permission) => {
+    // TODO: implement this!!! 
+    
+    // return isAuthenticated.createResolver((root, args, context) => {
+    //     const { roles } = context.user;
+    //     console.log(roles[0].permissions[0]);
+    //     console.log(roles[0].permissions[0].action)
+    //     if(!_.some(roles, role => _.includes(permission))) {
+    //         throw new (ForbiddenErrorForPermission(permission));
+    //     }
+    //     throw new Error('testing!!');
+    // });
+};
+
 module.exports = {
     isAuthenticated,
     isAdmin,
-    hasRole
+    hasRole,
+    hasPermission
 };

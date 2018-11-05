@@ -73,11 +73,6 @@ const server = new ApolloServer({
                         include: [ db.roles.permissions ]
                     }]
                 });
-                console.log('user roles are: ', user.roles[0].permissions);
-                // TODO: THIS IS MOCK DATA, we will include roles on the above query once ready
-                if(user && user.email === "admin@admin.com") {
-                    user.roles = [ 'admin' ];
-                }
             } catch (error) {
                 console.log(error);
             }

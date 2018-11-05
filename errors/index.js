@@ -18,9 +18,16 @@ const ForbiddenErrorForRole = (roleName) => {
     });
 };
 
+const ForbiddenErrorForPermission = (permission) => {
+    return createError('ForbiddenError', {
+        message: `Requires ${permission.action} ${permission.target} permission.`
+    });
+};
+
 module.exports = {
     ForbiddenError,
     UnknownError,
     AuthenticationError,
-    ForbiddenErrorForRole
+    ForbiddenErrorForRole,
+    ForbiddenErrorForPermission
 };
