@@ -1,6 +1,7 @@
 const { AuthenticationError } = require('apollo-server');
 const db = require('../models');
 const jwt = require('jsonwebtoken');
+const axios = require("axios");
 
 module.exports = {
     Query: {
@@ -16,7 +17,7 @@ module.exports = {
                     if (!lead) {
                         throw new Error('lead not found error');
                     }
-                    console.log(lead);
+
                     resolve(lead);
                 })
                 .catch(err => reject(err));
@@ -147,8 +148,27 @@ module.exports = {
                         }
                         resolve(user);
                     })
-                    .catch(err => reject(err));;
+                    .catch(err => reject(err));
                 }
+            });
+        },
+
+        getValuation: (root, { formData }, context) => {
+            return new Promise((resolve, reject) => {
+                let config = {
+                    headers: {
+                        "Authorization": process.env.PRICEPREDICTION_TOKEN
+                    }
+                };
+
+                axios.post("https://api.housevault.co.uk/house_valuation/price_prediction/", formData, config)
+                    .then(function (response) {
+                        resolve("success");
+                    })
+                    .catch(function (error) {
+                      reject(new Error(error) );
+                    });
+
             });
         },
         createCompany: (root, { name, telephone, postcode, town, building_number }, context) => {
@@ -168,3 +188,4 @@ module.exports = {
         }
     }
 };
+

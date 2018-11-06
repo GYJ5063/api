@@ -1,7 +1,7 @@
 const { ApolloServer } = require('apollo-server');
 const Sequelize = require('sequelize');
 const jwt = require('jsonwebtoken');
-
+require('dotenv').config();
 const config = require('./config/config.json');
 
 // This is a (sample) collection of books we'll be able to query
