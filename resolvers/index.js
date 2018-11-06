@@ -2,7 +2,9 @@ const { AuthenticationError } = require('apollo-server');
 const db = require('../models');
 const jwt = require('jsonwebtoken');
 const axios = require("axios");
-
+const bugsnag = require('bugsnag');
+const _ = require('lodash');
+bugsnag.register('9dc7f221d3f8cbb50c70d0e1df02ceb3');
 module.exports = {
     Query: {
         leads: (root, {id}) => {
@@ -153,17 +155,29 @@ module.exports = {
             });
         },
 
-        getValuation: (root, { formData }, context) => {
+        getValuation: (root, { postcode, building_number, building_name,built_from, property_type, wall_type, number_habitable_rooms, total_floor_area }, context) => {
             return new Promise((resolve, reject) => {
                 let config = {
                     headers: {
                         "Authorization": process.env.PRICEPREDICTION_TOKEN
                     }
                 };
-
+                let formData = {
+                    "postcode": postcode,
+                    "building_number":building_number,
+                    "building_name":building_name,
+                    "built_from": built_from,
+                    "property_type":property_type,
+                    "wall_type": wall_type,
+                    "number_habitable_rooms":number_habitable_rooms,
+                    "total_floor_area":total_floor_area,
+                    "report":1
+                };
+            console.log(formData);
                 axios.post("https://api.housevault.co.uk/house_valuation/price_prediction/", formData, config)
                     .then(function (response) {
-                        resolve("success");
+                        console.log(response.data);
+
                     })
                     .catch(function (error) {
                       reject(new Error(error) );
