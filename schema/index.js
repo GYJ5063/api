@@ -53,10 +53,10 @@ const typeDefs = gql`
     
     type PredictResults {
       	predict_price: Int,
-		probability: Int,
+		probability: Float,
 		exist_in_epc: Int,
 		predict_price_low: Int,
-		band: Int,
+		band: Float,
 		predict_price_up: Int,
 		lat: Float,
 		lng: Float,
@@ -65,7 +65,7 @@ const typeDefs = gql`
 
     type Mutation {
         login(email: String!, password: String!): String!
-        getValuation(postcode: String!, building_number: String!, building_name: String!, built_from: String!, property_type: String!, wall_type: String!, number_habitable_rooms: Int!, total_floor_area: Int!,): [Report]!
+        getValuation(postcode: String!, building_number: String!, building_name: String!, built_from: String!, property_type: String!, wall_type: String!, number_habitable_rooms: Int!, total_floor_area: Int!,): Report!
         createUser(email: String!, first_name: String!, last_name: String!, password: String!,
                    company_name: String, company_telephone: String, company_postcode: String, company_town: String, company_building_number: String): User!
         createCompany(name: String!, telephone: String!, postcode: String!, town: String!, building_number: Int!): Company!
