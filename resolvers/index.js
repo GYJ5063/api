@@ -2,6 +2,7 @@ const { AuthenticationError } = require('apollo-server');
 const db = require('../models');
 const jwt = require('jsonwebtoken');
 const passwordGenerator = require('generate-password');
+const { hasPermission } = require('./access-control-layer');
 
 const sendEmail = (transporter, to, subject, html) => {
     return new Promise((resolve, reject) => {
@@ -65,9 +66,6 @@ module.exports = {
         login: (root, { email, password }, { SECRET }) => {
             return db.users.find({ where: { email }})
                 .then(user => {
-                    if(!user) {
-                        throw new Error('user not found error');
-                    }
                     return db.users.validPassword(password, user.password).then(valid => {
                         if(valid) {
                             const token = jwt.sign(
@@ -137,14 +135,15 @@ module.exports = {
                     .catch(err => reject(err));
             });
         },
-        verifyToken: (root, { token }, { EMAIL_SECRET }) => {
+        verifyToken: (root, { token }, context) => {
+            console.log('user from the context is: ', context.user);
             return new Promise((resolve, reject) => {
                 db.password_resets.find({ where: { token }})
                     .then(pwr => {
                         if(pwr) {
                             try {
                                 // token exists, verify it hasn't expired
-                                const { user } = jwt.verify(token, EMAIL_SECRET);
+                                const { user } = jwt.verify(token, context.EMAIL_SECRET);
                                 resolve(true);
                             } catch (error) {
                                 console.error(error);
@@ -203,12 +202,7 @@ module.exports = {
                     });
             });
         },
-        createUser: (root, args, context) => {
-            const { user } = context;
-            if(!user) {
-                return new AuthenticationError('must be logged in');
-            }
-
+        createUser: hasPermission({ action: 'create', target: 'user' }).createResolver((root, args, context) => {
             // TODO: see if this method can be simplified using async/await
             return new Promise((resolve, reject) => {
                 const { email, first_name, last_name,
@@ -297,7 +291,7 @@ module.exports = {
                     .catch(err => reject(err));;
                 }
             });
-        },
+        }),
         createCompany: (root, { name, telephone, postcode, town, building_number }, context) => {
             return new Promise((resolve, reject) => {
                 const company = { name, telephone, address: { postcode, town, building_number }};

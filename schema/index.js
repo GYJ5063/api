@@ -34,7 +34,7 @@ const typeDefs = gql`
         last_name: String!
         email: String!
         phone_number: String!
-        sale_valuation: Int!
+        sales_valuation: Int!
         rental_valuation: Int!
         company: Company,
         createdAt: String!,
