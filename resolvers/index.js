@@ -171,13 +171,26 @@ module.exports = {
                     wall_type,
                     number_habitable_rooms,
                     total_floor_area,
-                    "report":1
+                    "report": 1
                 };
             console.log(formData);
                 axios.post("https://api.housevault.co.uk/house_valuation/price_prediction/", formData, config)
                     .then(function (response) {
-                        console.log(response.data);
-                        resolve(response.data);
+                        // just to be safe
+                        const toReturn = null;
+                        const { data } = response;
+
+                        const rg5y = _.map(data.regional_price_5y, (value, key) => {
+                            return `${key}:${value}`;
+                        });
+                        console.log(rg5y);
+                        // copy 
+                        toReturn = { ...data };
+                        // overwrite this prop
+                        toReturn.regional_price_5y = rg5y;
+
+                        console.log(toReturn);
+                        resolve(toReturn);
                     })
                     .catch(function (error) {
                         console.error(error.response.data);

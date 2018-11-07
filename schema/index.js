@@ -36,11 +36,13 @@ const typeDefs = gql`
         phone_number: String!
         sales_valuation: Int!
         rental_valuation: Int!
-        company: Company,    
+        company: Company,
         createdAt: String!,
-        updatedAt: String!        
+        updatedAt: String!
     }
-    
+
+    # TODO: use enums
+
     type Report {
         predict_results: PredictResults ,
         regional_price_5y: [String],
