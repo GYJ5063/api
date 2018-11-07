@@ -157,30 +157,30 @@ module.exports = {
 
         getValuation: (root, { postcode, building_number, building_name,built_from, property_type, wall_type, number_habitable_rooms, total_floor_area }, context) => {
             return new Promise((resolve, reject) => {
-                let config = {
+                const config = {
                     headers: {
                         "Authorization": process.env.PRICEPREDICTION_TOKEN
                     }
                 };
-                let formData = {
-                    "postcode": postcode,
-                    "building_number":building_number,
-                    "building_name":building_name,
-                    "built_from": built_from,
-                    "property_type":property_type,
-                    "wall_type": wall_type,
-                    "number_habitable_rooms":number_habitable_rooms,
-                    "total_floor_area":total_floor_area,
-                    "report":1
+                const formData = {
+                    postcode,
+                    building_number,
+                    building_name,
+                    built_from,
+                    property_type,
+                    wall_type,
+                    number_habitable_rooms,
+                    total_floor_area,
+                    "report": 1
                 };
             console.log(formData);
                 axios.post("https://api.housevault.co.uk/house_valuation/price_prediction/", formData, config)
                     .then(function (response) {
-                        console.log(response.data);
-
+                        resolve(response.data);
                     })
                     .catch(function (error) {
-                      reject(new Error(error) );
+                        console.error(error);
+                        reject(new Error(error) );
                     });
 
             });
