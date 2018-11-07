@@ -176,25 +176,11 @@ module.exports = {
             console.log(formData);
                 axios.post("https://api.housevault.co.uk/house_valuation/price_prediction/", formData, config)
                     .then(function (response) {
-                        // just to be safe
-                        const toReturn = null;
-                        const { data } = response;
-
-                        const rg5y = _.map(data.regional_price_5y, (value, key) => {
-                            return `${key}:${value}`;
-                        });
-                        console.log(rg5y);
-                        // copy 
-                        toReturn = { ...data };
-                        // overwrite this prop
-                        toReturn.regional_price_5y = rg5y;
-
-                        console.log(toReturn);
-                        resolve(toReturn);
+                        resolve(response.data);
                     })
                     .catch(function (error) {
-                        console.error(error.response.data);
-                      reject(new Error(error) );
+                        console.error(error);
+                        reject(new Error(error) );
                     });
 
             });
