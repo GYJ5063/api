@@ -1,8 +1,13 @@
 const { AuthenticationError } = require('apollo-server');
-const db = require('../models');
 const jwt = require('jsonwebtoken');
 const passwordGenerator = require('generate-password');
+const axios = require("axios");
+const bugsnag = require('bugsnag');
+const _ = require('lodash');
+bugsnag.register('9dc7f221d3f8cbb50c70d0e1df02ceb3');
+
 const { hasPermission } = require('./access-control-layer');
+const db = require('../models');
 
 const sendEmail = (transporter, to, subject, html) => {
     return new Promise((resolve, reject) => {
@@ -35,7 +40,7 @@ module.exports = {
                     if (!lead) {
                         throw new Error('lead not found error');
                     }
-                    console.log(lead);
+
                     resolve(lead);
                 })
                 .catch(err => reject(err));
@@ -288,10 +293,40 @@ module.exports = {
                             .forgotPassword(root, { email: user.email }, context)
                             .then(success => resolve(user));
                     })
-                    .catch(err => reject(err));;
+                    .catch(err => reject(err));
                 }
             });
         }),
+        getValuation: (root, { postcode, building_number, building_name,built_from, property_type, wall_type, number_habitable_rooms, total_floor_area }, context) => {
+            return new Promise((resolve, reject) => {
+                const config = {
+                    headers: {
+                        "Authorization": process.env.PRICEPREDICTION_TOKEN
+                    }
+                };
+                const formData = {
+                    postcode,
+                    building_number,
+                    building_name,
+                    built_from,
+                    property_type,
+                    wall_type,
+                    number_habitable_rooms,
+                    total_floor_area,
+                    "report": 1
+                };
+            console.log(formData);
+                axios.post("https://api.housevault.co.uk/house_valuation/price_prediction/", formData, config)
+                    .then(function (response) {
+                        resolve(response.data);
+                    })
+                    .catch(function (error) {
+                        console.error(error);
+                        reject(new Error(error) );
+                    });
+
+            });
+        },
         createCompany: (root, { name, telephone, postcode, town, building_number }, context) => {
             return new Promise((resolve, reject) => {
                 const company = { name, telephone, address: { postcode, town, building_number }};
@@ -309,3 +344,4 @@ module.exports = {
         }
     }
 };
+

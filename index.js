@@ -4,7 +4,10 @@ const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
 
 const db = require('./models');
+require('dotenv').config();
 const config = require('./config/config.json');
+
+
 
 // This is a (sample) collection of books we'll be able to query
 // the GraphQL server for.  A more complete example might fetch
@@ -29,7 +32,7 @@ const connection = new Sequelize(database, username, password, {
     dialect: dialect,
     host: host,
     define: {
-        // true by default. false because bydefault sequelize adds createdAt, modifiedAt columns with timestamps
+        // true by default. false because by default sequelize adds createdAt, modifiedAt columns with timestamps
         timestamps: false
     }
 });
