@@ -53,6 +53,7 @@ module.exports = function(sequelize, DataTypes) {
 	users.associate = function(models) {
 		// this assignment is done for the nested associations during creation
 		users.company = users.belongsTo(models.companies, { as: 'company', foreignKey: 'company_id', targetKey: 'id' });
+		users.roles = users.belongsToMany(models.roles, { through: models.user_roles, foreignKey: 'user_id' });
 	};
 
 	users.validPassword = function(password, hash) {
@@ -67,7 +68,7 @@ module.exports = function(sequelize, DataTypes) {
 		});
 	};
 
-	users.hook('beforeCreate', function(user, options) {
+	users.hook('beforeSave', function(user, options) {
 		return new Promise((resolve, reject) => {
 			var salt = bcrypt.genSaltSync(12);
 
