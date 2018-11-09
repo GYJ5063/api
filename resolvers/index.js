@@ -65,6 +65,18 @@ module.exports = {
                     })
                     .catch(err => reject(err));
             });
+        },
+        addresses: (root, { postcode }, context) => {
+            return new Promise((resolve, reject) => {
+                db.addresses.findAll({ 
+                    where: { 
+                        postcode: postcode,
+                        organisation_name: ''
+                    }
+                })
+                .then(addresses => resolve(addresses))
+                .catch(err => reject(err));
+            });
         }
     },
     Mutation: {

@@ -68,13 +68,15 @@ module.exports = function(sequelize, DataTypes) {
 			type: DataTypes.STRING(2),
 			allowNull: true
 		},
-		created_at: {
+		createdAt: {
+			field: 'created_at',
 			type: DataTypes.DATE,
-			allowNull: true
+			allowNull: false
 		},
-		updated_at: {
+			updatedAt: {
+			field: 'updated_at',
 			type: DataTypes.DATE,
-			allowNull: true
+			allowNull: false
 		},
 		lat: {
 			type: DataTypes.DECIMAL,
