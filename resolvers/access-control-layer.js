@@ -50,6 +50,14 @@ const isAdmin = isAuthenticated.createResolver((root, args, context) => {
     // so the request continues to next child resolver
 });
 
+const fromAllowedOrigin = baseResolver.createResolver((root, args, { origin }) => {
+    const { ROOT_URL_PRODUCTION, ROOT_URL_DEVELOPMENT} = process.env;
+
+    if (origin !== ROOT_URL_PRODUCTION || origin !== ROOT_URL_DEVELOPMENT ) {
+        throw new ForbiddenError();
+    }
+});
+
 const hasPermission = ({ action, target }) => {
     return isAuthenticated.createResolver((root, args, context) => {
         const { roles } = context.user;
@@ -70,5 +78,6 @@ module.exports = {
     isAuthenticated,
     isAdmin,
     hasRole,
-    hasPermission
+    hasPermission,
+    fromAllowedOrigin
 };

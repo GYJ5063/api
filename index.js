@@ -51,6 +51,7 @@ const server = new ApolloServer({
     typeDefs,
     resolvers,
     context: async ({ req }) => {
+        const { origin } = req.headers;
         let user = null;
         let bearer = null;
         const token = req.headers.authorization;
@@ -74,7 +75,7 @@ const server = new ApolloServer({
             }
         }
 
-        return { user, SECRET, EMAIL_SECRET, transporter, url };
+        return { user, SECRET, EMAIL_SECRET, transporter, url, origin };
     } 
 
 });
