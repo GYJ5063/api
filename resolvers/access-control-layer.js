@@ -52,8 +52,8 @@ const isAdmin = isAuthenticated.createResolver((root, args, context) => {
 
 const fromAllowedOrigin = baseResolver.createResolver((root, args, { origin }) => {
     const { ROOT_URL_PRODUCTION, ROOT_URL_DEVELOPMENT} = process.env;
-
-    if (origin !== ROOT_URL_PRODUCTION || origin !== ROOT_URL_DEVELOPMENT ) {
+    console.log(ROOT_URL_DEVELOPMENT !== origin);
+    if (!(origin === ROOT_URL_PRODUCTION || origin === ROOT_URL_DEVELOPMENT)) {
         throw new ForbiddenError();
     }
 });

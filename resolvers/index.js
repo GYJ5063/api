@@ -66,7 +66,6 @@ module.exports = {
             });
         },
         addresses: fromAllowedOrigin.createResolver((root, { postcode }, { origin }) => {
-            console.log(origin);
             return new Promise((resolve, reject) => {
                 db.addresses.findAll({ 
                     where: { 
