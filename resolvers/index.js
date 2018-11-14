@@ -66,7 +66,7 @@ module.exports = {
                     .catch(err => reject(err));
             });
         },
-        addresses: isAuthenticated.createResolver((root, { postcode }, context) => {
+        addresses: (root, { postcode }, context) => {
             return new Promise((resolve, reject) => {
                 db.addresses.findAll({ 
                     where: { 
@@ -77,7 +77,7 @@ module.exports = {
                 .then(addresses => resolve(addresses))
                 .catch(err => reject(err));
             });
-        })
+        }
     },
     Mutation: {
         login: (root, { email, password }, { SECRET }) => {
