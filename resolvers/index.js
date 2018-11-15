@@ -341,6 +341,24 @@ module.exports = {
                     })
                     .catch(err => reject(err));
             });
+        },
+        testEmailSend: (root, { email }, { mailgun }) => {
+            return new Promise((resolve, reject) => {
+                const data = {
+                    from: 'noreply@housevault.co.uk',
+                    to: email,
+                    subject: 'testing!',
+                    html: `Hello, world! <a href="https://api.housevault.co.uk/">This is a link</a>`
+                };
+                mailgun.messages().send(data, (err, body) => {
+                    if(err) {
+                        console.error(err);
+                        reject(err);
+                    } else {
+                        resolve('submitted!');
+                    }
+                });
+            });
         }
     }
 };

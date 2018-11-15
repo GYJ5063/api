@@ -74,6 +74,7 @@ const typeDefs = gql`
         createCompany(name: String!, telephone: String!, postcode: String!, town: String!, building_number: Int!): Company!
         verifyToken(token: String!): Boolean!
         resetPassword(token: String!, password: String!, confirmPassword: String!): String!
+        testEmailSend(email: String!): String
     }
 `;
 

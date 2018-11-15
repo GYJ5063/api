@@ -2,6 +2,7 @@ const { ApolloServer } = require('apollo-server');
 const Sequelize = require('sequelize');
 const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
+const Mailgun = require('mailgun-js');
 
 const db = require('./models');
 require('dotenv').config();
@@ -36,6 +37,11 @@ const connection = new Sequelize(database, username, password, {
         timestamps: false
     }
 });
+
+
+const apiKey = 'bb0b40afde047204606ce871c47ac102-9525e19d-c399e464';
+const domain = 'mg.housevault.co.uk';
+const mailgun = new Mailgun({ apiKey, domain, });
 
 
 const transporter = nodemailer.createTransport({
@@ -80,7 +86,7 @@ const server = new ApolloServer({
             }
         }
 
-        return { user, SECRET, EMAIL_SECRET, transporter, url };
+        return { user, SECRET, EMAIL_SECRET, transporter, mailgun, url };
     } 
 
 });
