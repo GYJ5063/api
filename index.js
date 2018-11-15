@@ -40,7 +40,7 @@ const connection = new Sequelize(database, username, password, {
 
 
 const apiKey = 'bb0b40afde047204606ce871c47ac102-9525e19d-c399e464';
-const domain = 'mg.housevault.co.uk';
+const domain = 'housevault.co.uk';
 const mailgun = new Mailgun({ apiKey, domain, });
 
 
