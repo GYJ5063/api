@@ -46,6 +46,25 @@ module.exports = {
                 .catch(err => reject(err));
             });
         },
+
+        companyByValuationURL: (root, {valuation_url}) => {
+            return new Promise((resolve, reject) => {
+                    db.companies.find({
+                        where: {
+                            valuation_url: valuation_url
+                        }
+                    })
+                    .then(company => {
+
+                        if (!company) {
+                            throw new Error('company not found error');
+                        }
+
+                        resolve(company);
+                    })
+                    .catch(err => reject(err));
+            });
+        },
         profile: (root, { username, password }, { user }) => {
             return new Promise((resolve, reject) => {
                 if(!user) {
@@ -338,6 +357,21 @@ module.exports = {
                             reject('Error retrieving company');
                         }
                         resolve(company);
+                    })
+                    .catch(err => reject(err));
+            });
+        },
+        createLead: (root, { first_name, last_name, email, phone_number, sales_valuation, rental_valuation, company_id}, context) => {
+            return new Promise((resolve, reject) => {
+                const lead = { first_name, last_name, email, phone_number, sales_valuation, rental_valuation, company_id};
+                db.leads.create(
+                    lead,
+                    { include: [{ all: true}] })
+                    .then(lead => {
+                        if(!lead) {
+                            reject('Error saving the lead');
+                        }
+                        resolve(lead);
                     })
                     .catch(err => reject(err));
             });

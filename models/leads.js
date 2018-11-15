@@ -19,7 +19,7 @@ module.exports = (sequelize, DataTypes) => {
           type: DataTypes.STRING
       },
       phone_number: {
-          type: DataTypes.INTEGER
+          type: DataTypes.STRING
       },
       sales_valuation: {
           type: DataTypes.DOUBLE
