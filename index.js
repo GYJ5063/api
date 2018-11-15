@@ -75,7 +75,7 @@ const server = new ApolloServer({
             }
         }
 
-        return { user, SECRET, EMAIL_SECRET, transporter, url, origin };
+        return { user, SECRET, EMAIL_SECRET, transporter, url, origin, env };
     } 
 
 });
