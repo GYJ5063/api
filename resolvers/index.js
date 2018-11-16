@@ -359,6 +359,19 @@ module.exports = {
                     }
                 });
             });
+        },
+        createReportPdf: async (root, { html }, { mailgun, puppeteer}) => {
+            return (async () => {
+                const browser = await puppeteer.launch();
+                const page = await browser.newPage();
+
+                //await page.setContent(html);
+                await page.goto(`data:text/html;charset=UTF-8,${html}`, { waitUntil: 'networkidle0' });
+                await page.emulateMedia('print');
+                await page.pdf({path: 'testing.pdf', format: 'A4'});
+                await browser.close();
+                return 'done';
+              })();
         }
     }
 };
