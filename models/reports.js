@@ -26,7 +26,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   }, {});
   reports.associate = function(models) {
-
+    // TODO: add report associations
   };
   return reports;
 };
