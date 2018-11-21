@@ -1,4 +1,5 @@
 const { AuthenticationError } = require('apollo-server');
+const GraphQLJSON = require('graphql-type-json');
 const jwt = require('jsonwebtoken');
 const passwordGenerator = require('generate-password');
 const axios = require("axios");
@@ -27,6 +28,7 @@ const sendEmail = (transporter, to, subject, html) => {
 };
 
 module.exports = {
+    JSON: GraphQLJSON,
     Query: {
         leads: (root, {id}) => {
             return new Promise((resolve, reject) => {
@@ -375,6 +377,10 @@ module.exports = {
                     })
                     .catch(err => reject(err));
             });
+        },
+        saveReport: (root, args, context) => {
+            console.log(args);
+            return '😎';
         }
     }
 };
