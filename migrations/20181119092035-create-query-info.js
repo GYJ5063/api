@@ -24,9 +24,8 @@ module.exports = {
           key: "id"
         }
       },
-      number_habitable_rooms: Sequelize.INTEGER,
-      //TODO:
-      // add number of bedrooms and numer of reception rooms once the api has been updated
+      num_bedrooms: Sequelize.INTEGER,
+      num_receptionrooms: Sequelize.INTEGER,
       built_from: Sequelize.ENUM('Enclosed End-Terrace', 'Enclosed Mid-Terrace', 'End-Terrace', 'Mid-Terrace', 'Semi-Detached', 'Detached'),
       total_floor_area: Sequelize.INTEGER,
       wall_type: Sequelize.ENUM('brick', 'cavity wall', 'timber', 'stone', 'cob', 'unknown'),

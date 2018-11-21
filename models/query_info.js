@@ -17,7 +17,8 @@ module.exports = (sequelize, DataTypes) => {
         key: "id"
       }
     },
-    number_habitable_rooms: DataTypes.INTEGER,
+    num_bedrooms: DataTypes.INTEGER,
+    num_receptionrooms: DataTypes.INTEGER,
     built_from: DataTypes.ENUM('Enclosed End-Terrace', 'Enclosed Mid-Terrace', 'End-Terrace', 'Mid-Terrace', 'Semi-Detached', 'Detached'),
     total_floor_area: DataTypes.INTEGER,
     wall_type: DataTypes.ENUM('brick', 'cavity wall', 'timber', 'stone', 'cob', 'unknown'),
