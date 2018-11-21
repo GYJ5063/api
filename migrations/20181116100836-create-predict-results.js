@@ -19,6 +19,9 @@ module.exports = {
       predict_price: {
         type: Sequelize.INTEGER(11)
       },
+      rental_predict_price: {
+        type: Sequelize.INTEGER(11)
+      },
       probability: {
         type: Sequelize.DECIMAL(5, 2)
       },

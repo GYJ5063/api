@@ -16,6 +16,7 @@ module.exports = (sequelize, DataTypes) => {
     lat: DataTypes.DECIMAL(10, 6),
     lng: DataTypes.DECIMAL(10, 6),
     predict_price: DataTypes.INTEGER(11),
+    rental_predict_price: DataTypes.INTEGER(11),
     predict_price_low: DataTypes.INTEGER(11),
     predict_price_up: DataTypes.INTEGER(11),
     probability: DataTypes.DECIMAL(5, 2)
