@@ -140,7 +140,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   }, { timestamps: false, tableName: 'regional_price_10y' });
   regional_price_10y.associate = function(models) {
-    // associations can be defined here
+    regional_price_10y.belongsTo(models.reports, { foreignKey: 'report_id', targetKey: 'id' });
   };
   return regional_price_10y;
 };
