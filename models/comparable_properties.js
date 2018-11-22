@@ -36,13 +36,13 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING
     },
     lat: {
-      type: DataTypes.DECIMAL
+      type: DataTypes.DECIMAL(10, 6)
     },
     address_1: {
       type: DataTypes.STRING
     },
     lng: {
-      type: DataTypes.DECIMAL
+      type: DataTypes.DECIMAL(10, 6)
     },
     house_type_out: {
       type: DataTypes.STRING

@@ -19,7 +19,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING
     },
     lng: {
-      type: DataTypes.DECIMAL
+      type: DataTypes.DECIMAL(10, 6)
     },
     price: {
       type: DataTypes.INTEGER(11)
@@ -31,7 +31,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER
     },
     lat: {
-      type: DataTypes.DECIMAL
+      type: DataTypes.DECIMAL(10, 6)
     },
     front_image_url: {
       type: DataTypes.STRING

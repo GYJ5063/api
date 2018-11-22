@@ -23,7 +23,7 @@ module.exports = (sequelize, DataTypes) => {
     total_floor_area: DataTypes.INTEGER,
     wall_type: DataTypes.ENUM('brick', 'cavity wall', 'timber', 'stone', 'cob', 'unknown'),
     property_type : DataTypes.ENUM('Flat', 'Maisonette', 'Bungalow', 'House')
-  }, {});
+  }, { timestamps: false });
   query_info.associate = function(models) {
     query_info.belongsTo(models.reports, { as: 'reports', foreignKey: 'report_id', targetKey: 'id' });
   };
