@@ -395,7 +395,7 @@ module.exports = {
                     company_id: company_id,
                     comparable_properties: _.values(selling_results.comparable_properties),
                     rental_comparable_properties: _.values(rental_results.rental_comparable_properties),
-                    sales_history_analyze: _.values(rental_results.sales_history_analyze),
+                    sales_history_analyze: _.values(selling_results.sales_history_analyze),
                     regional_housetype_price_10y: regional_housetype_price_10y,
                     national_avg_price_10y: selling_results.national_avg_price_10y,
                     regional_price_10y: selling_results.regional_price_10y,
