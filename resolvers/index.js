@@ -405,8 +405,7 @@ module.exports = {
                     query_info: selling_results.query_info
                 };
 
-                db.reports.create(incoming,
-                    { include: [{ all: true}] })
+                db.reports.create(incoming, { include: [{ all: true}] })
                     .then(res => {
                         console.log(res);
                         resolve('😎')
