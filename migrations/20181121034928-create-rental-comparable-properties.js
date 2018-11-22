@@ -26,7 +26,7 @@ module.exports = {
         type: Sequelize.STRING
       },
       lng: {
-        type: Sequelize.DECIMAL
+        type: Sequelize.DECIMAL(10, 6)
       },
       price: {
         type: Sequelize.INTEGER(11)
@@ -38,7 +38,7 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       lat: {
-        type: Sequelize.DECIMAL
+        type: Sequelize.DECIMAL(10, 6)
       },
       front_image_url: {
         type: Sequelize.STRING

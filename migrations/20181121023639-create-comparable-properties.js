@@ -24,7 +24,7 @@ module.exports = {
       current_valuation: {
         type: Sequelize.INTEGER(10).UNSIGNED
       },
-      distance_to_query_property: {
+      distance: {
         type: Sequelize.INTEGER(10)
       },
       sold_date: {
@@ -43,13 +43,13 @@ module.exports = {
         type: Sequelize.STRING
       },
       lat: {
-        type: Sequelize.DECIMAL(11)
+        type: Sequelize.DECIMAL(10, 6)
       },
       address_1: {
         type: Sequelize.STRING
       },
       lng: {
-        type: Sequelize.DECIMAL(11)
+        type: Sequelize.DECIMAL(10, 6)
       },
       house_type_out: {
         type: Sequelize.STRING

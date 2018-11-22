@@ -17,7 +17,7 @@ module.exports = (sequelize, DataTypes) => {
     current_valuation: {
       type: DataTypes.INTEGER(10).UNSIGNED
     },
-    distance_to_query_property: {
+    distance: {
       type: DataTypes.INTEGER(10)
     },
     sold_date: {
