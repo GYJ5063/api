@@ -378,9 +378,44 @@ module.exports = {
                     .catch(err => reject(err));
             });
         },
-        saveReport: (root, args, context) => {
-            console.log(args);
-            return '😎';
+        saveReport: (root, { report, company_id }, context) => {
+            return new Promise((resolve, reject) => {
+                const { selling_results, rental_results } = report;
+
+                const regional_housetype_price_10y = Object.keys(selling_results.regional_housetype_price_10y).map(k => {
+                    const ht = selling_results.regional_housetype_price_10y[k];
+                    ht.house_type = k;
+                    return ht;
+                });
+
+                const predict_results = { rental_predict_price: rental_results.rental_predict_price, ...selling_results.predict_results};
+
+                const incoming = {
+                    address_id: selling_results.query_info.address_id,
+                    company_id: company_id,
+                    comparable_properties: _.values(selling_results.comparable_properties),
+                    rental_comparable_properties: _.values(rental_results.rental_comparable_properties),
+                    sales_history_analyze: _.values(rental_results.sales_history_analyze),
+                    regional_housetype_price_10y: regional_housetype_price_10y,
+                    national_avg_price_10y: selling_results.national_avg_price_10y,
+                    regional_price_10y: selling_results.regional_price_10y,
+                    local_property_type_statistic: selling_results.local_property_type_statistic,
+                    predict_price_10y: selling_results.predict_price_10y,
+                    predict_results: predict_results,
+                    query_info: selling_results.query_info
+                };
+
+                db.reports.create(incoming,
+                    { include: [{ all: true}] })
+                    .then(res => {
+                        console.log(res);
+                        resolve('😎')
+                    })
+                    .catch(err => {
+                        console.error(err);
+                        reject('😞')
+                    });
+            });
         }
     }
 };
