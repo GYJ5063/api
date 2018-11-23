@@ -51,9 +51,6 @@ module.exports = {
       lng: {
         type: Sequelize.DECIMAL(10, 6)
       },
-      house_type_out: {
-        type: Sequelize.STRING
-      },
       postcode: {
         type: Sequelize.STRING(8)
       }

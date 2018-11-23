@@ -32,9 +32,6 @@ module.exports = (sequelize, DataTypes) => {
     size: {
       type: DataTypes.INTEGER(5)
     },
-    house_type: {
-      type: DataTypes.STRING
-    },
     lat: {
       type: DataTypes.DECIMAL(10, 6)
     },
