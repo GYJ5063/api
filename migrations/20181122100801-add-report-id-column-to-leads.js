@@ -2,19 +2,21 @@
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.addColumn(
-      'leads',
-      'report_id',
-      {
-        type: Sequelize.UUID,
-        allowNull: false,
-        references: {
-          model: "reports",
-          key: "id"
-        }
-      }
-    ).then(res => console.log(res))
-     .catch(err => console.error(err));
+    return queryInterface.sequelize.transaction(t => {
+      return queryInterface.addColumn(
+        'leads',
+        'report_id',
+        {
+          type: Sequelize.UUID,
+          allowNull: false,
+          references: {
+            model: "reports",
+            key: "id"
+          }
+        },
+        { transaction: t}
+      )
+    });
   },
 
   down: (queryInterface, Sequelize) => {
