@@ -60,7 +60,7 @@ const typeDefs = gql`
         comparable_properties: JSON,
         rental_comparable_properties: JSON,
         sales_history_analyze: JSON,
-        national_avg_price_10y JSON,
+        national_avg_price_10y: JSON,
         regional_housetype_price_10y: JSON,
         predict_price_10y: JSON,
         query_info: JSON
