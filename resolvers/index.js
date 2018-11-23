@@ -363,9 +363,9 @@ module.exports = {
                     .catch(err => reject(err));
             });
         },
-        createLead: (root, { first_name, last_name, email, phone_number, sales_valuation, rental_valuation, company_id}, context) => {
+        createLead: (root, { first_name, last_name, email, phone_number, sales_valuation, rental_valuation, company_id, report_id}, context) => {
             return new Promise((resolve, reject) => {
-                const lead = { first_name, last_name, email, phone_number, sales_valuation, rental_valuation, company_id};
+                const lead = { first_name, last_name, email, phone_number, sales_valuation, rental_valuation, company_id, report_id};
                 db.leads.create(
                     lead,
                     { include: [{ all: true}] })
@@ -406,13 +406,15 @@ module.exports = {
                 };
 
                 db.reports.create(incoming, { include: [{ all: true}] })
-                    .then(res => {
-                        console.log(res);
-                        resolve('😎')
+                    .then(report => {
+                        if(!report) {
+                            reject('Error saving report');
+                        }
+                        resolve(report.id);
                     })
                     .catch(err => {
                         console.error(err);
-                        reject('😞')
+                        reject('Error saving report');
                     });
             });
         }

@@ -80,10 +80,10 @@ const typeDefs = gql`
         createUser(email: String!, first_name: String!, last_name: String!, password: String!,
                    company_name: String, company_telephone: String, company_postcode: String, company_town: String, company_building_number: String): User!
         createCompany(name: String!, telephone: String!, postcode: String!, town: String!, building_number: Int!): Company!
-        createLead(first_name: String!, last_name: String!, email: String!, phone_number: String!, sales_valuation: Float!, rental_valuation: Float!, company_id: Int!): Lead!
+        createLead(first_name: String!, last_name: String!, email: String!, phone_number: String!, sales_valuation: Float!, rental_valuation: Float!, company_id: Int!, report_id: ID): Lead!
         verifyToken(token: String!): Boolean!
         resetPassword(token: String!, password: String!, confirmPassword: String!): String!
-        saveReport(report: JSON, company_id: Int) : String
+        saveReport(report: JSON!, company_id: Int!) : ID
     }
 `;
 
