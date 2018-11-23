@@ -53,12 +53,15 @@ const typeDefs = gql`
 
     type Report {
         predict_results: JSON,
-        regional_price_5y: JSON,
+        regional_price_10y: JSON,
         local_property_type_statistic: JSON,
         comparable_properties: JSON,
+        rental_comparable_properties: JSON,
         sales_history_analyze: JSON,
-        regional_housetype_price_5y: JSON,
-        predict_price_5y: JSON
+        national_avg_price_10y JSON,
+        regional_housetype_price_10y: JSON,
+        predict_price_10y: JSON,
+        query_info: JSON
     }
     
     type PredictResults {
