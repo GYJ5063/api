@@ -31,7 +31,7 @@ module.exports = {
     JSON: GraphQLJSON,
     Query: {
         leads: async (root, { valuation_url }, context) => {
-            const company = await db.companies.findOne({ where: { valuation_url } });
+            const company = await db.companies.findOne({where: { valuation_url } });
             if (!company) {
                 throw new Error('company not found');
             }
@@ -39,6 +39,18 @@ module.exports = {
             const leads = await db.leads.findAll({ where: { company_id: company.id } });
 
             return leads;
+        },
+        report: async (root, { id }, context) => {
+            const report = await db.reports.findOne({
+                where: { id },
+                include: [{ all: true}]
+            });
+            //console.log(JSON.stringify(report, null, 4));
+            if (!report) {
+                throw new Error('😞');
+            }
+            return report;
+            //return '😎';
         },
         companyByValuationURL: (root, {valuation_url}) => {
             return new Promise((resolve, reject) => {

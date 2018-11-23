@@ -36,6 +36,7 @@ const typeDefs = gql`
         restrictedEndPoint: String!
         leads(valuation_url: String!): [Lead],
         companyByValuationURL(valuation_url: ID!): Company
+        report(id: ID!) : Report
     }
    
      type Lead {
