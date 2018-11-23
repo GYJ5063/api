@@ -363,11 +363,10 @@ module.exports = {
                     .catch(err => reject(err));
             });
         },
-        createLead: (root, { first_name, last_name, email, phone_number, sales_valuation, rental_valuation, company_id, report_id}, context) => {
+        createLead: (root, args, context) => {
             return new Promise((resolve, reject) => {
-                const lead = { first_name, last_name, email, phone_number, sales_valuation, rental_valuation, company_id, report_id};
                 db.leads.create(
-                    lead,
+                    args,
                     { include: [{ all: true}] })
                     .then(lead => {
                         if(!lead) {
