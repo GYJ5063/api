@@ -19,7 +19,7 @@ module.exports = (sequelize, DataTypes) => {
           type: DataTypes.STRING
       },
       phone_number: {
-          type: DataTypes.INTEGER
+          type: DataTypes.STRING
       },
       sales_valuation: {
           type: DataTypes.DOUBLE
@@ -34,6 +34,14 @@ module.exports = (sequelize, DataTypes) => {
               model: "companies",
               key: "id"
           }
+      },
+      report_id: {
+        allowNull: false,
+        type: DataTypes.UUID,
+        references: {
+          model: "reports",
+          key: "id"
+        }
       },
       createdAt: {
           allowNull: false,

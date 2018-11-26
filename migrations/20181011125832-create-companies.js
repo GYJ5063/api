@@ -15,7 +15,31 @@ module.exports = {
       },
       telephone : {
         allowNull: false,
-        type: Sequelize.STRING(10)
+        type: Sequelize.STRING(15)
+      },
+      logo : {
+          allowNull: true,
+          type: Sequelize.STRING
+      },
+      primary_colour : {
+          allowNull: true,
+          type: Sequelize.STRING(8)
+      },
+      website_url : {
+          allowNull: true,
+          type: Sequelize.STRING
+      },
+      valuation_url : {
+          allowNull: true,
+          type: Sequelize.STRING
+      },
+      page_title : {
+          allowNull: true,
+          type: Sequelize.STRING
+      },
+      meta_description : {
+          allowNull: true,
+          type: Sequelize.STRING
       },
       createdAt: {
         allowNull: false,

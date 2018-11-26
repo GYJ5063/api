@@ -1,6 +1,9 @@
 const { gql } = require ('apollo-server');
+const GraphQLJSON = require('graphql-type-json');
 
 const typeDefs = gql`
+    scalar JSON
+
     type User {
         id: Int!
         first_name: String!
@@ -19,9 +22,22 @@ const typeDefs = gql`
         id: Int!
         name: String!
         telephone: String!
+        logo: String!
+        primary_colour: String!
+        website_url: String!
+        valuation_url: String!
+        page_title: String!
+        meta_description: String!
         address: CompanyAddress!
     }
-
+ 
+    type Query {
+        profile: User
+        restrictedEndPoint: String!
+        leads(id: ID!): [Lead],
+        companyByValuationURL(valuation_url: ID!): Company
+    }
+   
      type Lead {
         id: Int!
         first_name: String!
@@ -35,16 +51,17 @@ const typeDefs = gql`
         updatedAt: String!
     }
 
-    # TODO: use enums
-
     type Report {
-        predict_results: PredictResults ,
-        regional_price_5y: [String],
-        local_property_type_statistic:[String],
-        comparable_properties:[String],
-        sales_history_analyze:[String],
-        regional_housetype_price_5y:[String],
-        predict_price_5y:[String]
+        predict_results: JSON,
+        regional_price_10y: JSON,
+        local_property_type_statistic: JSON,
+        comparable_properties: JSON,
+        rental_comparable_properties: JSON,
+        sales_history_analyze: JSON,
+        national_avg_price_10y: JSON,
+        regional_housetype_price_10y: JSON,
+        predict_price_10y: JSON,
+        query_info: JSON
     }
     
     type PredictResults {
@@ -94,8 +111,10 @@ const typeDefs = gql`
         createUser(email: String!, first_name: String!, last_name: String!, password: String!,
                    company_name: String, company_telephone: String, company_postcode: String, company_town: String, company_building_number: String): User!
         createCompany(name: String!, telephone: String!, postcode: String!, town: String!, building_number: Int!): Company!
+        createLead(first_name: String!, last_name: String!, email: String!, phone_number: String!, sales_valuation: Float!, rental_valuation: Float!, company_id: Int!, report_id: ID): Lead!
         verifyToken(token: String!): Boolean!
         resetPassword(token: String!, password: String!, confirmPassword: String!): String!
+        saveReport(report: JSON!, company_id: Int!) : ID
     }
 `;
 

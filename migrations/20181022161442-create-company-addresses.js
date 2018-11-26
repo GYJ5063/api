@@ -61,11 +61,11 @@ module.exports = {
         allowNull: true
       },
       lat: {
-        type: Sequelize.DECIMAL,
+        type: Sequelize.DECIMAL(10, 6),
         allowNull: true
       },
       lng: {
-        type: Sequelize.DECIMAL,
+        type: Sequelize.DECIMAL(10, 6),
         allowNull: true
       },
       udprn: {

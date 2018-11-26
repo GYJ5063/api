@@ -15,6 +15,30 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       unique: true
     },
+    logo : {
+        allowNull: true,
+        type: DataTypes.STRING
+    },
+    primary_colour : {
+        allowNull: true,
+        type: DataTypes.STRING(8)
+    },
+    website_url : {
+        allowNull: true,
+        type: DataTypes.STRING
+    },
+    valuation_url : {
+        allowNull: true,
+        type: DataTypes.STRING
+    },
+    page_title : {
+        allowNull: true,
+        type: DataTypes.STRING
+    },
+    meta_description : {
+        allowNull: true,
+        type: DataTypes.STRING
+    },
     createdAt: {
       allowNull: false,
       type: DataTypes.DATE
