@@ -45,30 +45,22 @@ module.exports = {
                 where: { id },
                 include: [{ all: true}]
             });
-            //console.log(JSON.stringify(report, null, 4));
+
             if (!report) {
                 throw new Error('😞');
             }
 
-            // 
             const houseTypeNames = _.map(report.regional_housetype_price_10y, 'house_type');
-
-            const regional_housetype_price_10y = 
-              _.map(houseTypeNames, (val, key) => {
-                const ht = {};
-                ht[val] = _.omit(_.find(report.regional_housetype_price_10y, {'house_type': val}), 'house_type');
-                return ht;
-              });
-      
-            const predict_results = _.omit(report.predict_results, ['rental_predict_price', 'id']);
+            const regional_housetype_price_10y = {};
+            _.forEach(houseTypeNames, htn => {
+                regional_housetype_price_10y[htn] = _.find(report.regional_housetype_price_10y, { 'house_type': htn });
+            });
 
             const outgoing = {
               id: report.id,
               selling_results: {
-                // TODO: fix this
-                // these properties are causing a circular reference error
-                //predict_results,
-                //regional_housetype_price_10y,
+                predict_results: report.predict_results,
+                regional_housetype_price_10y,
                 sales_history_analyze: report.sales_history_analyze,
                 query_info: report.query_info,
                 local_property_type_statistic: report.local_property_type_statistic,
@@ -83,9 +75,7 @@ module.exports = {
               }
             };
 
-            console.log(outgoing);
             return outgoing;
-            //return '😎';
         },
         companyByValuationURL: (root, {valuation_url}) => {
             return new Promise((resolve, reject) => {
