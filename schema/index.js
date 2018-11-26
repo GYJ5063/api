@@ -36,7 +36,7 @@ const typeDefs = gql`
         restrictedEndPoint: String!
         leads(valuation_url: String!): [Lead],
         companyByValuationURL(valuation_url: ID!): Company
-        report(id: ID!) : ReportSaved
+        report(id: ID!) : Report
     }
    
      type Lead {
@@ -52,24 +52,28 @@ const typeDefs = gql`
         createdAt: String!,
         updatedAt: String!
     }
+    
+    type SellingResults {
+        predict_results: JSON,
+        sales_history_analyze: JSON,
+        query_info: JSON,
+        local_property_type_statistic: JSON,
+        national_avg_price_10y: JSON,
+        comparable_properties: JSON,
+        regional_price_10y: JSON,
+        regional_housetype_price_10y: JSON
+        predict_price_10y: JSON
+    }
+
+    type RentalResults {
+        rental_comparable_properties: JSON,
+        rental_predict_price: JSON
+    }
 
     type Report {
-        predict_results: JSON,
-        regional_price_10y: JSON,
-        local_property_type_statistic: JSON,
-        comparable_properties: JSON,
-        rental_comparable_properties: JSON,
-        sales_history_analyze: JSON,
-        national_avg_price_10y: JSON,
-        regional_housetype_price_10y: JSON,
-        predict_price_10y: JSON,
-        query_info: JSON
-    }
-    
-    type ReportSaved {
         id: ID,
-        selling_results: JSON,
-        rental_results: JSON
+        selling_results: SellingResults,
+        rental_results: RentalResults
     }
 
     type PredictResults {
