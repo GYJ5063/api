@@ -1,4 +1,5 @@
 const { AuthenticationError } = require('apollo-server');
+const GraphQLJSON = require('graphql-type-json');
 const jwt = require('jsonwebtoken');
 const passwordGenerator = require('generate-password');
 const axios = require("axios");
@@ -27,6 +28,7 @@ const sendEmail = (transporter, to, subject, html) => {
 };
 
 module.exports = {
+    JSON: GraphQLJSON,
     Query: {
         leads: (root, {id}) => {
             return new Promise((resolve, reject) => {
@@ -361,11 +363,10 @@ module.exports = {
                     .catch(err => reject(err));
             });
         },
-        createLead: (root, { first_name, last_name, email, phone_number, sales_valuation, rental_valuation, company_id}, context) => {
+        createLead: (root, args, context) => {
             return new Promise((resolve, reject) => {
-                const lead = { first_name, last_name, email, phone_number, sales_valuation, rental_valuation, company_id};
                 db.leads.create(
-                    lead,
+                    args,
                     { include: [{ all: true}] })
                     .then(lead => {
                         if(!lead) {
@@ -374,6 +375,46 @@ module.exports = {
                         resolve(lead);
                     })
                     .catch(err => reject(err));
+            });
+        },
+        saveReport: (root, { report, company_id }, context) => {
+            return new Promise((resolve, reject) => {
+                const { selling_results, rental_results } = report;
+
+                const regional_housetype_price_10y = Object.keys(selling_results.regional_housetype_price_10y).map(k => {
+                    const ht = selling_results.regional_housetype_price_10y[k];
+                    ht.house_type = k;
+                    return ht;
+                });
+
+                const predict_results = { rental_predict_price: rental_results.rental_predict_price, ...selling_results.predict_results};
+
+                const incoming = {
+                    address_id: selling_results.query_info.address_id,
+                    company_id: company_id,
+                    comparable_properties: _.values(selling_results.comparable_properties),
+                    rental_comparable_properties: _.values(rental_results.rental_comparable_properties),
+                    sales_history_analyze: _.values(selling_results.sales_history_analyze),
+                    regional_housetype_price_10y: regional_housetype_price_10y,
+                    national_avg_price_10y: selling_results.national_avg_price_10y,
+                    regional_price_10y: selling_results.regional_price_10y,
+                    local_property_type_statistic: selling_results.local_property_type_statistic,
+                    predict_price_10y: selling_results.predict_price_10y,
+                    predict_results: predict_results,
+                    query_info: selling_results.query_info
+                };
+
+                db.reports.create(incoming, { include: [{ all: true}] })
+                    .then(report => {
+                        if(!report) {
+                            reject('Error saving report');
+                        }
+                        resolve(report.id);
+                    })
+                    .catch(err => {
+                        console.error(err);
+                        reject('Error saving report');
+                    });
             });
         }
     }
