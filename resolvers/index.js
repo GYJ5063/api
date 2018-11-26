@@ -7,7 +7,7 @@ const bugsnag = require('bugsnag');
 const _ = require('lodash');
 bugsnag.register('9dc7f221d3f8cbb50c70d0e1df02ceb3');
 
-const { hasPermission } = require('./access-control-layer');
+const { hasPermission, fromAllowedOrigin } = require('./access-control-layer');
 const db = require('../models');
 
 const sendEmail = (transporter, to, subject, html) => {
@@ -86,7 +86,19 @@ module.exports = {
                     })
                     .catch(err => reject(err));
             });
-        }
+        },
+        addresses: fromAllowedOrigin.createResolver((root, { postcode }, { origin }) => {
+            return new Promise((resolve, reject) => {
+                db.addresses.findAll({ 
+                    where: { 
+                        postcode: postcode,
+                        organisation_name: ''
+                    }
+                })
+                .then(addresses => resolve(addresses))
+                .catch(err => reject(err));
+            });
+        })
     },
     Mutation: {
         login: (root, { email, password }, { SECRET }) => {

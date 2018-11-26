@@ -76,6 +76,34 @@ const typeDefs = gql`
 		confidence_level: Int
     }
 
+    type Address {
+        id: Int!
+        postcode: String!
+        town: String!
+        dependent_locality: String
+        double_dependent_locality: String
+        thoroughfare: String
+        dependent_thoroughfare: String
+        building_number: Int
+        building_name: String
+        sub_building_name: String
+        po_box: String
+        department_name: String
+        organisation_name: String
+        postcode_type: String
+        su_organisation_indicator: String
+        delivery_point_suffix: String
+        lat: Float
+        lng: Float
+        udprn: Int
+    }
+
+    type Query {
+        profile: User
+        leads(id: ID!): [Lead]
+        addresses(postcode: String!) : [Address]
+    }
+
     type Mutation {
         login(email: String!, password: String!): String!
         forgotPassword(email: String!): String!
