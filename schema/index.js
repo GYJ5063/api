@@ -36,7 +36,7 @@ const typeDefs = gql`
         restrictedEndPoint: String!
         leads(valuation_url: String!): [Lead],
         companyByValuationURL(valuation_url: ID!): Company
-        report(id: ID!) : Report
+        report(id: ID!) : ReportSaved
     }
    
      type Lead {
@@ -66,6 +66,12 @@ const typeDefs = gql`
         query_info: JSON
     }
     
+    type ReportSaved {
+        id: ID,
+        selling_results: JSON,
+        rental_results: JSON
+    }
+
     type PredictResults {
       	predict_price: Int,
 		probability: Float,

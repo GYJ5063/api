@@ -49,7 +49,42 @@ module.exports = {
             if (!report) {
                 throw new Error('😞');
             }
-            return report;
+
+            // 
+            const houseTypeNames = _.map(report.regional_housetype_price_10y, 'house_type');
+
+            const regional_housetype_price_10y = 
+              _.map(houseTypeNames, (val, key) => {
+                const ht = {};
+                ht[val] = _.omit(_.find(report.regional_housetype_price_10y, {'house_type': val}), 'house_type');
+                return ht;
+              });
+      
+            const predict_results = _.omit(report.predict_results, ['rental_predict_price', 'id']);
+
+            const outgoing = {
+              id: report.id,
+              selling_results: {
+                // TODO: fix this
+                // these properties are causing a circular reference error
+                //predict_results,
+                //regional_housetype_price_10y,
+                sales_history_analyze: report.sales_history_analyze,
+                query_info: report.query_info,
+                local_property_type_statistic: report.local_property_type_statistic,
+                national_avg_price_10y: report.national_avg_price_10y,
+                comparable_properties: report.comparable_properties,
+                regional_price_10y: report.regional_price_10y,
+                predict_price_10y: report.predict_price_10y
+              },
+              rental_results: {
+                rental_comparable_properties: report.rental_comparable_properties,
+                rental_predict_price: report.predict_results.rental_predict_price
+              }
+            };
+
+            console.log(outgoing);
+            return outgoing;
             //return '😎';
         },
         companyByValuationURL: (root, {valuation_url}) => {
