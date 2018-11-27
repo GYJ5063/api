@@ -24,6 +24,7 @@ const typeDefs = gql`
         telephone: String!
         logo: String!
         primary_colour: String!
+        secondary_colour: String
         website_url: String!
         valuation_url: String!
         page_title: String!

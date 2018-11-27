@@ -23,6 +23,10 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: true,
         type: DataTypes.STRING(8)
     },
+    secondary_colour : {
+      allowNull: true,
+      type: DataTypes.STRING(8)
+    },
     website_url : {
         allowNull: true,
         type: DataTypes.STRING
