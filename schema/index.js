@@ -34,7 +34,7 @@ const typeDefs = gql`
     type Query {
         profile: User
         restrictedEndPoint: String!
-        leads(valuation_url: String!): [Lead],
+        leads: [Lead],
         companyByValuationURL(valuation_url: ID!): Company
         report(id: ID!) : Report
     }

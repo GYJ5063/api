@@ -30,13 +30,12 @@ const sendEmail = (transporter, to, subject, html) => {
 module.exports = {
     JSON: GraphQLJSON,
     Query: {
-        leads: hasPermission({ action: 'view', target: 'leads'}).createResolver(async (root, { valuation_url }, { user }) => {
-            const company = await db.companies.findOne({where: { comapany_id: user.company_id } });
-            if (!company) {
-                throw new Error('company not found');
+        leads: hasPermission({ action: 'view', target: 'leads'}).createResolver(async (root, args, { user }) => {
+            if(!user.company_id) {
+                throw new Error('Must have a company');
             }
 
-            const leads = await db.leads.findAll({ where: { company_id: company.id } });
+            const leads = await db.leads.findAll({ where: { company_id: user.company_id } });
 
             return leads;
         }),
