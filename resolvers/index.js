@@ -30,8 +30,8 @@ const sendEmail = (transporter, to, subject, html) => {
 module.exports = {
     JSON: GraphQLJSON,
     Query: {
-        leads: async (root, { valuation_url }, context) => {
-            const company = await db.companies.findOne({where: { valuation_url } });
+        leads: hasPermission({ action: 'view', target: 'leads'}).createResolver(async (root, { valuation_url }, { user }) => {
+            const company = await db.companies.findOne({where: { comapany_id: user.company_id } });
             if (!company) {
                 throw new Error('company not found');
             }
@@ -39,7 +39,7 @@ module.exports = {
             const leads = await db.leads.findAll({ where: { company_id: company.id } });
 
             return leads;
-        },
+        }),
         report: async (root, { id }, context) => {
             const report = await db.reports.findOne({
                 where: { id },
