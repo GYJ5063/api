@@ -34,9 +34,9 @@ const typeDefs = gql`
  
     type Query {
         profile: User
-        restrictedEndPoint: String!
         leads: [Lead],
         companyByValuationURL(valuation_url: ID!): Company
+        addresses(postcode: String!) : [Address],
         report(id: ID!) : Report
     }
    
@@ -74,6 +74,7 @@ const typeDefs = gql`
     type Report {
         id: ID,
         company: Company,
+        address: Address,
         selling_results: SellingResults,
         rental_results: RentalResults
     }
@@ -110,13 +111,6 @@ const typeDefs = gql`
         lat: Float
         lng: Float
         udprn: Int
-    }
-
-    type Query {
-        profile: User,
-        leads(id: ID!): [Lead],
-        addresses(postcode: String!) : [Address],
-        companyByValuationURL(valuation_url: ID!): Company
     }
 
     type Mutation {
