@@ -25,7 +25,7 @@ module.exports = (sequelize, DataTypes) => {
       field: 'updated_at',
       type: DataTypes.DATE
     }
-  }, {});
+  }, { underscored: true });
   reports.associate = function(models) {
     reports.hasMany(models.comparable_properties, { foreignKey: 'report_id' });
     reports.hasMany(models.rental_comparable_properties, { foreignKey: 'report_id' });
@@ -38,6 +38,9 @@ module.exports = (sequelize, DataTypes) => {
     reports.hasOne(models.predict_price_10y, { as: 'predict_price_10y', foreignKey: 'report_id' });
     reports.hasOne(models.predict_results, { as: 'predict_results', foreignKey: 'report_id' });
     reports.hasOne(models.query_info, { as: 'query_info', foreignKey: 'report_id' });
+
+    reports.address = reports.belongsTo(models.addresses, { as: 'address', foreignKey: 'address_id' });
+    reports.company = reports.belongsTo(models.companies, { as: 'company', foreignKey: 'company_id'});
   };
   return reports;
 };

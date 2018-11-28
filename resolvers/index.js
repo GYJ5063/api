@@ -57,6 +57,7 @@ module.exports = {
 
             const outgoing = {
               id: report.id,
+              company: report.company,
               selling_results: {
                 predict_results: report.predict_results,
                 regional_housetype_price_10y,

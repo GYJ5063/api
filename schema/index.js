@@ -72,6 +72,7 @@ const typeDefs = gql`
 
     type Report {
         id: ID,
+        company: Company,
         selling_results: SellingResults,
         rental_results: RentalResults
     }
