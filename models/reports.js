@@ -25,7 +25,7 @@ module.exports = (sequelize, DataTypes) => {
       field: 'updated_at',
       type: DataTypes.DATE
     }
-  }, { underscored: true });
+  }, {  });
   reports.associate = function(models) {
     reports.hasMany(models.comparable_properties, { foreignKey: 'report_id' });
     reports.hasMany(models.rental_comparable_properties, { foreignKey: 'report_id' });
