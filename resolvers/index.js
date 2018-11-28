@@ -46,7 +46,7 @@ module.exports = {
             });
 
             if (!report) {
-                throw new Error('😞');
+                throw new Error('Report not found.');
             }
 
             const houseTypeNames = _.map(report.regional_housetype_price_10y, 'house_type');
