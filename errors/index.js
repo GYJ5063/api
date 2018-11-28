@@ -1,7 +1,7 @@
 const { createError } = require('apollo-errors');
 
 const ForbiddenError = createError('ForbiddenError', {
-    message: 'Requires admin role'
+    message: 'UnAuthorised request'
 });
 
 const UnknownError = createError('UnknownError', {

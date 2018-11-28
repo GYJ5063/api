@@ -24,6 +24,7 @@ const typeDefs = gql`
         telephone: String!
         logo: String!
         primary_colour: String!
+        secondary_colour: String
         website_url: String!
         valuation_url: String!
         page_title: String!
@@ -87,6 +88,35 @@ const typeDefs = gql`
 		lat: Float,
 		lng: Float,
 		confidence_level: Int
+    }
+
+    type Address {
+        id: Int!
+        postcode: String!
+        town: String!
+        dependent_locality: String
+        double_dependent_locality: String
+        thoroughfare: String
+        dependent_thoroughfare: String
+        building_number: Int
+        building_name: String
+        sub_building_name: String
+        po_box: String
+        department_name: String
+        organisation_name: String
+        postcode_type: String
+        su_organisation_indicator: String
+        delivery_point_suffix: String
+        lat: Float
+        lng: Float
+        udprn: Int
+    }
+
+    type Query {
+        profile: User,
+        leads(id: ID!): [Lead],
+        addresses(postcode: String!) : [Address],
+        companyByValuationURL(valuation_url: ID!): Company
     }
 
     type Mutation {
