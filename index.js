@@ -74,7 +74,7 @@ const server = new ApolloServer({
                 console.log(error);
             }
         }
-
+        // TODO: add the company to the context here
         return { user, SECRET, EMAIL_SECRET, transporter, url, origin, env };
     } 
 
