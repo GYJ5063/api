@@ -30,15 +30,15 @@ const sendEmail = (transporter, to, subject, html) => {
 module.exports = {
     JSON: GraphQLJSON,
     Query: {
-        leads: hasPermission({ action: 'view', target: 'leads'}).createResolver(async (root, args, { user }) => {
-            if(!user.company_id) {
+        leads: async (root, { company_id }, context) => {
+            if(!company_id) {
                 throw new Error('Must have a company');
             }
 
-            const leads = await db.leads.findAll({ where: { company_id: user.company_id } });
+            const leads = await db.leads.findAll({ where: { company_id } });
 
             return leads;
-        }),
+        },
         report: async (root, { id }, context) => {
             const report = await db.reports.findOne({
                 where: { id },
