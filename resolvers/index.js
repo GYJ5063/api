@@ -30,7 +30,7 @@ const sendEmail = (transporter, to, subject, html) => {
 module.exports = {
     JSON: GraphQLJSON,
     Query: {
-        leads: async (root, args, { origin }) => {
+        leads: hasPermission({ action: 'view', target: 'leads' }).createResolver(async (root, args, { origin }) => {
             const company = await db.companies.findOne({
                 where: { valuation_url: origin }
             });
@@ -41,7 +41,7 @@ module.exports = {
             const leads = await db.leads.findAll({ where: { company_id: company.id } });
 
             return leads;
-        },
+        }),
         report: async (root, { id }, context) => {
             const report = await db.reports.findOne({
                 where: { id },
@@ -92,6 +92,7 @@ module.exports = {
 
             return company;
         },
+        // This is probably not needed anymore
         profile: (root, { username, password }, { user }) => {
             return new Promise((resolve, reject) => {
                 if(!user) {
