@@ -35,7 +35,7 @@ const typeDefs = gql`
     type Query {
         profile: User
         leads(company_id: ID!): [Lead],
-        companyByValuationURL(valuation_url: ID!): Company
+        company: Company
         addresses(postcode: String!) : [Address],
         report(id: ID!) : Report
     }
