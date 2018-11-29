@@ -30,12 +30,15 @@ const sendEmail = (transporter, to, subject, html) => {
 module.exports = {
     JSON: GraphQLJSON,
     Query: {
-        leads: async (root, { company_id }, context) => {
-            if(!company_id) {
-                throw new Error('Must have a company');
+        leads: async (root, args, { origin }) => {
+            const company = await db.companies.findOne({
+                where: { valuation_url: origin }
+            });
+            if(!company) {
+                throw new Error('Company for leads not found');
             }
 
-            const leads = await db.leads.findAll({ where: { company_id } });
+            const leads = await db.leads.findAll({ where: { company_id: company.id } });
 
             return leads;
         },
