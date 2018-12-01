@@ -98,7 +98,5 @@ module.exports = function(sequelize, DataTypes) {
 				key: 'id'
 			}
 		}
-	}, {
-		tableName: 'addresses'
-	});
+	}, { tableName: 'addresses', underscored: true });
 };

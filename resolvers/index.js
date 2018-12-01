@@ -30,25 +30,54 @@ const sendEmail = (transporter, to, subject, html) => {
 module.exports = {
     JSON: GraphQLJSON,
     Query: {
-        leads: (root, {id}) => {
-            return new Promise((resolve, reject) => {
-                db.leads.findAll({
-                    where: {
-                        company_id: id
-                    },
-                    include: { model: db.companies }
-                })
-                .then(lead => {
-                    if (!lead) {
-                        throw new Error('lead not found error');
-                    }
+        leads: async (root, { company_id }, context) => {
+            if(!company_id) {
+                throw new Error('Must have a company');
+            }
 
-                    resolve(lead);
-                })
-                .catch(err => reject(err));
-            });
+            const leads = await db.leads.findAll({ where: { company_id } });
+
+            return leads;
         },
+        report: async (root, { id }, context) => {
+            const report = await db.reports.findOne({
+                where: { id },
+                include: [{ all: true}]
+            });
 
+            if (!report) {
+                throw new Error('Report not found.');
+            }
+
+            const houseTypeNames = _.map(report.regional_housetype_price_10y, 'house_type');
+            const regional_housetype_price_10y = {};
+            _.forEach(houseTypeNames, htn => {
+                regional_housetype_price_10y[htn] = _.find(report.regional_housetype_price_10y, { 'house_type': htn });
+            });
+
+            const outgoing = {
+              id: report.id,
+              company: report.company,
+              address: report.address,
+              selling_results: {
+                predict_results: report.predict_results,
+                regional_housetype_price_10y,
+                sales_history_analyze: report.sales_history_analyze,
+                query_info: report.query_info,
+                local_property_type_statistic: report.local_property_type_statistic,
+                national_avg_price_10y: report.national_avg_price_10y,
+                comparable_properties: report.comparable_properties,
+                regional_price_10y: report.regional_price_10y,
+                predict_price_10y: report.predict_price_10y
+              },
+              rental_results: {
+                rental_comparable_properties: report.rental_comparable_properties,
+                rental_predict_price: report.predict_results.rental_predict_price
+              }
+            };
+
+            return outgoing;
+        },
         companyByValuationURL: (root, {valuation_url}) => {
             return new Promise((resolve, reject) => {
                     db.companies.find({
