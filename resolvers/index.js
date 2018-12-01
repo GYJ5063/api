@@ -78,6 +78,17 @@ module.exports = {
 
             return outgoing;
         },
+        companyByValuationURL : async (root, { valuation_url }, context) => {
+            const company = await db.companies.findOne({
+                where: { valuation_url }
+            });
+
+            if (!company) {
+                throw new Error('company not found error');
+            }
+
+            return company;
+        },
         company: async (root, args, { origin }) => {
             const company = await db.companies.findOne({
                 where: { valuation_url: origin }
