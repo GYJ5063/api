@@ -80,6 +80,7 @@ module.exports = {
         },
         companyByValuationURL: (root, {valuation_url}) => {
             return new Promise((resolve, reject) => {
+
                     db.companies.find({
                         where: {
                             valuation_url: valuation_url
@@ -96,6 +97,19 @@ module.exports = {
                     .catch(err => reject(err));
             });
         },
+        company: async (root, args, { origin }) => {
+            console.log(origin);
+            const company = await db.companies.findOne({
+                where: { valuation_url: origin }
+            });
+
+            if (!company) {
+                throw new Error('company not found error');
+            }
+
+            return company;
+        },
+
         profile: (root, { username, password }, { user }) => {
             return new Promise((resolve, reject) => {
                 if(!user) {

@@ -38,6 +38,7 @@ const typeDefs = gql`
         companyByValuationURL(valuation_url: ID!): Company
         addresses(postcode: String!) : [Address],
         report(id: ID!) : Report
+        company: Company
     }
    
      type Lead {
