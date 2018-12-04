@@ -30,6 +30,7 @@ const typeDefs = gql`
         page_title: String!
         meta_description: String!
         address: CompanyAddress!
+        createdAt: String
     }
  
     type Query {
