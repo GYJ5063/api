@@ -42,6 +42,11 @@ module.exports = {
 
             return leads;
         }),
+        companies: hasPermission({ action: 'view', target: 'companies'}).createResolver(async (root, args, context) => {
+            const companies = await db.companies.findAll();
+
+            return companies;
+        }),
         report: async (root, { id }, context) => {
             const report = await db.reports.findOne({
                 where: { id },

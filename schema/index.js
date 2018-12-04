@@ -38,6 +38,7 @@ const typeDefs = gql`
         company: Company
         addresses(postcode: String!) : [Address],
         report(id: ID!) : Report
+        companies: [Company]
     }
    
      type Lead {
