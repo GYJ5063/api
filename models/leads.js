@@ -43,6 +43,14 @@ module.exports = (sequelize, DataTypes) => {
           key: "id"
         }
       },
+      address_id: {
+        allowNull: false,
+        type: DataTypes.INTEGER(10).UNSIGNED,
+        references: {
+            models: "addresses",
+            key: "id"
+        }
+      },
       createdAt: {
           allowNull: false,
           type: DataTypes.DATE
