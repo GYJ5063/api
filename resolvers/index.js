@@ -38,7 +38,10 @@ module.exports = {
                 throw new Error('Company for leads not found');
             }
 
-            const leads = await db.leads.findAll({ where: { company_id: company.id } });
+            const leads = await db.leads.findAll({
+                where: { company_id: company.id },
+                include: [ { model: db.addresses, as: 'valuation_address'} ]
+            });
 
             return leads;
         }),

@@ -63,6 +63,7 @@ module.exports = (sequelize, DataTypes) => {
 
     leads.associate = function(models) {
         leads.belongsTo(models.companies, { foreignKey: 'company_id', targetKey: 'id' });
+        leads.valuation_address = leads.belongsTo(models.addresses, { as: 'valuation_address', foreignKey: 'address_id', targetKey: 'id' });
     };
 
   return leads;

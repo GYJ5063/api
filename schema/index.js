@@ -51,6 +51,7 @@ const typeDefs = gql`
         phone_number: String!
         sales_valuation: Int!
         rental_valuation: Int!
+        valuation_address: Address
         company_id: Int!
         report_id: ID!
         createdAt: String!,

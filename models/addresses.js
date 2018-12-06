@@ -1,7 +1,7 @@
 /* jshint indent: 1 */
 
 module.exports = function(sequelize, DataTypes) {
-	return sequelize.define('addresses', {
+	const addresses = sequelize.define('addresses', {
 		id: {
 			type: DataTypes.INTEGER(10).UNSIGNED,
 			allowNull: false,
@@ -99,4 +99,10 @@ module.exports = function(sequelize, DataTypes) {
 			}
 		}
 	}, { tableName: 'addresses', underscored: true });
+
+	addresses.associate = function(models) {
+		addresses.hasOne(models.leads, { foreignKey: 'address_id' });
+	};
+
+	return addresses;
 };
