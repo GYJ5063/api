@@ -120,6 +120,17 @@ module.exports = {
 
             return company;
         },
+        companyById:  hasPermission({ action: 'view', target: 'companies'}).createResolver(async (root, { id }, context) => {
+            const company = await db.companies.findOne({
+                where: { id }
+            });
+
+            if (!company) {
+                throw new Error('company not found error');
+            }
+
+            return company;
+        }),
         // This is probably not needed anymore
         profile: (root, { username, password }, { user }) => {
             return new Promise((resolve, reject) => {
@@ -482,7 +493,19 @@ module.exports = {
                         reject('Error saving report');
                     });
             });
-        }
+        },
+        updateCompany: hasPermission({ action: 'update', target: 'companies' }).createResolver(async (root, args, context) => {
+            // even though the id is the same, we do not want to update it.
+            const { id, ...updateModel } = args;
+
+            const res = await db.companies.update(updateModel, { where: { id } } );
+            if(!res) {
+                throw new Error('Company not updated')
+            }
+            const company = await db.companies.findOne({ where: { id }});
+
+            return company;
+        })
     }
 };
 

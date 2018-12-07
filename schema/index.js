@@ -41,6 +41,7 @@ const typeDefs = gql`
         report(id: ID!) : Report
         companies: [Company]
         company: Company
+        companyById(id: Int!): Company
     }
    
      type Lead {
@@ -128,6 +129,7 @@ const typeDefs = gql`
         verifyToken(token: String!): Boolean!
         resetPassword(token: String!, password: String!, confirmPassword: String!): String!
         saveReport(report: JSON!, company_id: Int!) : ID
+        updateCompany(id: Int!, name: String, telephone: String, primary_colour: String, secondary_colour: String, website_url: String, valuation_url: String, page_title: String, meta_description: String): Company
     }
 `;
 
